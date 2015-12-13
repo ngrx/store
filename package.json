@@ -4,7 +4,9 @@
   "description": "RxJS powered Redux for Angular2 apps",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npm run build_test && jasmine",
+    "build_test": "tsc typings/tsd.d.ts spec/store_spec.ts -m commonjs --outDir tmp --target ES5 -d --diagnostics",
+    "build_src": "tsc typings/tsd.d.ts src/store.ts --target es5 --module commonjs --outDir tmp"
   },
   "repository": {
     "type": "git",
@@ -20,5 +22,13 @@
   "bugs": {
     "url": "https://github.com/ngrx/store/issues"
   },
-  "homepage": "https://github.com/ngrx/store#readme"
+  "homepage": "https://github.com/ngrx/store#readme",
+  "devDependencies": {
+    "jasmine": "^2.4.1",
+    "jasmine-core": "^2.4.1",
+    "typescript": "^1.7.3"
+  },
+  "dependencies": {
+    "rxjs": "^5.0.0-alpha.14"
+  }
 }

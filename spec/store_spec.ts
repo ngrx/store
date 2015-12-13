@@ -1,5 +1,5 @@
 declare var describe, it, expect, hot, cold, expectObservable, expectSubscriptions, console;
-
+require('es6-shim');
 import 'reflect-metadata';
 import {provideStore, Store, Dispatcher} from '../src/store';
 import {Observable} from 'rxjs/Observable';

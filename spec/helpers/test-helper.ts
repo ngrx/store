@@ -1,11 +1,9 @@
 //Fail timeouts faster
 //Individual suites/specs should specify longer timeouts if needed.
 
-declare var global, require;
+declare var global, require, Symbol;
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 5000;
-
-console.log('helpers')
 
 var _ = require('lodash');
 var root = require('rxjs/util/root').root;

@@ -3,6 +3,10 @@
 		"target": "ES5",
 		"emitDecoratorMetadata": true,
 		"module": "commonjs",
-		"noLib": true
-	}
+		"noLib": true,
+		"moduleResolution": "node"
+	},
+	"exclude": [
+		"node_modules"
+	]
 }

@@ -4,6 +4,7 @@
     "*.js"
   ],
   "helpers": [
-    "helpers/**/*helper.js"
+    "helpers/test-helper.js",
+    "node_modules/rxjs/testing/*.js"
   ]
 }

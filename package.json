@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "npm run build_test && jasmine",
-    "build_test": "tsc typings/tsd.d.ts spec/store_spec.ts -m commonjs --outDir tmp --target ES5 -d --diagnostics",
+    "clean_test": "rm -rf tmp/",
+    "build_test": "npm run clean_test && tsc typings/tsd.d.ts spec/store_spec.ts spec/helpers/test-helper.ts -m commonjs --outDir tmp --target ES5 -d --diagnostics",
     "build_src": "tsc typings/tsd.d.ts src/store.ts --target es5 --module commonjs --outDir tmp"
   },
   "repository": {
@@ -26,6 +27,7 @@
   "devDependencies": {
     "jasmine": "^2.4.1",
     "jasmine-core": "^2.4.1",
+    "lodash": "^3.10.1",
     "typescript": "^1.7.3"
   },
   "dependencies": {

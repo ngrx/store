@@ -19,7 +19,7 @@ let dispatcher:Dispatcher;
 beforeEach(() => {
   
   injector = Injector.resolveAndCreate([
-    provideStore(Store, {counter: counterStore}, {counter: 0})
+    provideStore(Store, {counter1: counterStore, counter2: counterStore}, {counter1: 0, counter2: 1})
   ]);
   
   store = injector.get(Store);
@@ -36,27 +36,45 @@ describe('ngRx Store', () => {
 
 describe('basic store actions', function () {
   
-  it('should increment and decrement the counter', function () {
-    
-    const actionSequence = '--a--b--c--d--e';
+  const actionSequence = '--a--b--c--d--e';
     const actionValues = {
-      a: {type: INCREMENT}, //1
-      b: {type: INCREMENT}, //2
-      c: {type: DECREMENT}, //1
-      d: {type: RESET},     //0
-      e: {type: INCREMENT}  //1
+      a: {type: INCREMENT},
+      b: {type: INCREMENT},
+      c: {type: DECREMENT},
+      d: {type: RESET},
+      e: {type: INCREMENT}
     };
+  
+  it('should increment and decrement counter1', function () {
     
     const counterSteps = hot(actionSequence, actionValues);
     
     counterSteps.subscribe((action) => store.dispatch(action));
     
-    const counterState = store.select('counter');
+    const counterState = store.select('counter1');
     
     const stateSequence = '--v--w--x--y--z';
-    const stateValues = { v:1, w:2, x:1, y:0, z:1 }
+    const counter1Values = { v:1, w:2, x:1, y:0, z:1 }
    
-   expectObservable(counterState).toBe(stateSequence, stateValues);
+   expectObservable(counterState).toBe(stateSequence, counter1Values);
+    
+  });
+  
+  it('should increment and decrement counter2 separately', function () {
+    
+    const counterSteps = hot(actionSequence, actionValues);
+    
+    counterSteps.subscribe((action) => store.dispatch(action));
+    
+    const counter1State = store.select('counter1');
+    const counter2State = store.select('counter2');
+    
+    const stateSequence = '--v--w--x--y--z';
+    const counter1Values = { v:1, w:2, x:1, y:0, z:1 }
+    const counter2Values = { v:2, w:3, x:2, y:0, z:1 }
+   
+   expectObservable(counter1State).toBe(stateSequence, counter1Values);
+   expectObservable(counter2State).toBe(stateSequence, counter2Values);
     
   });
 });

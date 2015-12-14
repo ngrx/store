@@ -5,7 +5,7 @@ import {provideStore, Store, Dispatcher, Action} from '../src/store';
 import {Observable} from 'rxjs/Observable';
 import {Injector, provide} from 'angular2/core';
 
-import {counterStore, INCREMENT, DECREMENT, RESET} from './fixtures/counter';
+import {counterReducer, INCREMENT, DECREMENT, RESET} from './fixtures/counter';
 
 interface TestAppSchema {
   counter1: number;
@@ -32,7 +32,7 @@ describe('ngRx Store', () => {
     beforeEach(() => {
 
       injector = Injector.resolveAndCreate([
-        provideStore({ counter1: counterStore, counter2: counterStore }, { counter1: 0, counter2: 1 })
+        provideStore({ counter1: counterReducer, counter2: counterReducer }, { counter1: 0, counter2: 1 })
       ]);
 
       store = injector.get(Store);

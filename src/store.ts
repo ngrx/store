@@ -21,7 +21,7 @@ export class Store<T> extends ReplaySubject<T> {
 		super(1);
 	}
 	
-	select <T>(key: string): Observable<T> {
+	select <T, R>(key: string): Observable<R> {
 		return this.map(state => state[key]).distinctUntilChanged();
 	}
 	
@@ -36,7 +36,7 @@ export class Dispatcher<Action> extends Subject<Action> {
 	}
 }
 
-export const provideStore = (reducers:{[key:string]:Reducer<any>}, initialState:{[key:string]:any} = {}):any => {
+export const provideStore = (reducers:{[key:string]:Reducer<any>}, initialState:{[key:string]:any} = {}):any[] => {
 	
 	return [
 		provide(Store, {useFactory: createStore(reducers, initialState), deps: [Dispatcher]}),

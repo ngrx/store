@@ -1,5 +1,5 @@
 import {Observable} from 'rxjs/Observable';
-import {ReplaySubject} from 'rxjs/subject/ReplaySubject';
+import {BehaviorSubject} from 'rxjs/subject/BehaviorSubject';
 import {Subject} from 'rxjs/Subject';
 import {provide} from 'angular2/core';
 import {Operator} from 'rxjs/Operator';
@@ -15,10 +15,11 @@ export interface Reducer<T> {
 	(state: T, action: Action): T
 }
 
-export class Store<T> extends ReplaySubject<T> {
+export class Store<T> extends BehaviorSubject<T> {
 	
-	constructor(private _dispatcher:Subject<Action>){
-		super(1);
+	constructor(initialState:T, private _dispatcher:Subject<Action>, private reducer:any){
+		super(initialState);
+		_dispatcher.scan(reducer, initialState).subscribe(this);
 	}
 	
 	select <T, R>(key: string): Observable<R> {
@@ -57,12 +58,9 @@ const combineReducers = (reducers) => {
 
 export const createStore = (reducers:{[key:string]:Reducer<any>}, initialState:{[key:string]:any} = {}) => {
 	return (dispatcher: Subject<Action>) => {
+	
 		
-		let state = dispatcher.scan(combineReducers(reducers),initialState);
-		
-		let store = new Store(dispatcher);
-		
-		state.subscribe(store);
+		let store = new Store(initialState, dispatcher, combineReducers(reducers));
 	
 		return store;	
 	}

@@ -60,8 +60,8 @@ describe('ngRx Store', () => {
 
       const counterState = store.select('counter1');
 
-      const stateSequence = '--v--w--x--y--z';
-      const counter1Values = { v: 1, w: 2, x: 1, y: 0, z: 1 }
+      const stateSequence = 'i-v--w--x--y--z';
+      const counter1Values = { i: 0, v: 1, w: 2, x: 1, y: 0, z: 1 }
 
       expectObservable(counterState).toBe(stateSequence, counter1Values);
 
@@ -76,9 +76,9 @@ describe('ngRx Store', () => {
       const counter1State = store.select('counter1');
       const counter2State = store.select('counter2');
 
-      const stateSequence = '--v--w--x--y--z';
-      const counter1Values = { v: 1, w: 2, x: 1, y: 0, z: 1 }
-      const counter2Values = { v: 2, w: 3, x: 2, y: 0, z: 1 }
+      const stateSequence = 'i-v--w--x--y--z';
+      const counter1Values = { i: 0, v: 1, w: 2, x: 1, y: 0, z: 1 }
+      const counter2Values = { i: 1, v: 2, w: 3, x: 2, y: 0, z: 1 }
 
       expectObservable(counter1State).toBe(stateSequence, counter1Values);
       expectObservable(counter2State).toBe(stateSequence, counter2Values);
@@ -94,9 +94,9 @@ describe('ngRx Store', () => {
       const counter1State = store.select('counter1');
       const counter2State = store.select('counter2');
 
-      const stateSequence = '--v--w--x--y--z';
-      const counter1Values = { v: 1, w: 2, x: 1, y: 0, z: 1 }
-      const counter2Values = { v: 2, w: 3, x: 2, y: 0, z: 1 }
+      const stateSequence = 'i-v--w--x--y--z';
+      const counter1Values = { i: 0, v: 1, w: 2, x: 1, y: 0, z: 1 }
+      const counter2Values = { i: 1, v: 2, w: 3, x: 2, y: 0, z: 1 }
 
       expectObservable(counter1State).toBe(stateSequence, counter1Values);
       expectObservable(counter2State).toBe(stateSequence, counter2Values);

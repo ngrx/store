@@ -3,7 +3,6 @@ export const DECREMENT = 'DECREMENT';
 export const RESET = 'RESET';
 
 export const counterReducer = (state, action) => {
-	
 	switch (action.type) {
 		case INCREMENT:
 			return state + 1;

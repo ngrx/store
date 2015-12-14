@@ -56,7 +56,7 @@ bootstrap(App, [ provideStore({counter}, {counter: 0}) ];
 
 ```
 
-- You can then inject the `Store` and `Dispatcher` services into your Components and Services:
+- You can then inject the `Store` service into your Components and Services:
 
 ```typescript
 import {Store} from '@ngrx/store';

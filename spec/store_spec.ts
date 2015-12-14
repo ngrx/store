@@ -36,7 +36,6 @@ describe('ngRx Store', () => {
       ]);
 
       store = injector.get(Store);
-      dispatcher = injector.get(Dispatcher);
     });
 
     it('should provide an Observable Store', () => {
@@ -84,24 +83,7 @@ describe('ngRx Store', () => {
       expectObservable(counter2State).toBe(stateSequence, counter2Values);
 
     });
-    
-    it('should increment and decrement counter2 separately using the standalone dispatcher', function() {
 
-      const counterSteps = hot(actionSequence, actionValues);
-
-      counterSteps.subscribe((action) => dispatcher.dispatch(action));
-
-      const counter1State = store.select('counter1');
-      const counter2State = store.select('counter2');
-
-      const stateSequence = 'i-v--w--x--y--z';
-      const counter1Values = { i: 0, v: 1, w: 2, x: 1, y: 0, z: 1 }
-      const counter2Values = { i: 1, v: 2, w: 3, x: 2, y: 0, z: 1 }
-
-      expectObservable(counter1State).toBe(stateSequence, counter1Values);
-      expectObservable(counter2State).toBe(stateSequence, counter2Values);
-
-    });
   });
 
 });

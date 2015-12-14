@@ -16,18 +16,23 @@ export interface Reducer<T> {
 }
 
 export class Store<T> extends BehaviorSubject<T> {
-	
-	constructor(initialState:T, private _dispatcher:Subject<Action>, private reducer:any){
+	_reducer: Reducer<any>;
+	constructor(reducer:Reducer<any>, initialState:T){
+		
 		super(initialState);
-		_dispatcher.scan(reducer, initialState).subscribe(this);
+		this._reducer = reducer;
 	}
 	
 	select <T, R>(key: string): Observable<R> {
 		return this.map(state => state[key]).distinctUntilChanged();
 	}
 	
+	next(action:any){
+		super.next(this._reducer(this.value, action));
+	}
+	
 	dispatch(action:Action):void{
-		this._dispatcher.next(action);
+		this.next(action);
 	}
 }
 
@@ -40,8 +45,7 @@ export class Dispatcher<Action> extends Subject<Action> {
 export const provideStore = (reducers:{[key:string]:Reducer<any>}, initialState:{[key:string]:any} = {}):any[] => {
 	
 	return [
-		provide(Store, {useFactory: createStore(reducers, initialState), deps: [Dispatcher]}),
-		Dispatcher
+		provide(Store, {useFactory: createStore(reducers, initialState) }),
 	];
 
 }
@@ -57,10 +61,10 @@ const combineReducers = (reducers) => {
 
 
 export const createStore = (reducers:{[key:string]:Reducer<any>}, initialState:{[key:string]:any} = {}) => {
-	return (dispatcher: Subject<Action>) => {
+	return () => {
 	
 		
-		let store = new Store(initialState, dispatcher, combineReducers(reducers));
+		let store = new Store(combineReducers(reducers), initialState);
 	
 		return store;	
 	}

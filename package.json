@@ -8,7 +8,7 @@
     "clean_test": "rm -rf tmp/",
     "build_test": "npm run clean_test && tsc -p spec",
     "build_dist": "rm -rf dist && tsc",
-    "prepublish": "npm run build_dist && npm run copy_pkg"
+    "prepublish": "npm run build_dist"
   },
   "repository": {
     "type": "git",

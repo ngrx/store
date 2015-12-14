@@ -36,12 +36,6 @@ export class Store<T> extends BehaviorSubject<T> {
 	}
 }
 
-export class Dispatcher<Action> extends Subject<Action> {
-	dispatch(action:Action){
-		this.next(action);
-	}
-}
-
 export const provideStore = (reducers:{[key:string]:Reducer<any>}, initialState:{[key:string]:any} = {}):any[] => {
 	
 	return [

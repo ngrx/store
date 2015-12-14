@@ -2,10 +2,15 @@
 	"compilerOptions": {
 		"target": "ES5",
 		"emitDecoratorMetadata": true,
+		"experimentalDecorators": true,
 		"module": "commonjs",
-		"noLib": true,
-		"moduleResolution": "node"
+		"moduleResolution": "node",
+		"outDir": "dist",
+		"declaration": true
 	},
+	"files": [
+		"src/store.ts"
+	],
 	"exclude": [
 		"node_modules"
 	]

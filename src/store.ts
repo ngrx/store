@@ -30,15 +30,18 @@ export class Store<T> extends ReplaySubject<T> {
 	}
 }
 
-export class Dispatcher {
-	dispatch(action:Action){}
+export class Dispatcher<Action> extends Subject<Action> {
+	dispatch(action:Action){
+		this.next(action);
+	}
 }
 
-export const provideStore = (token:any, reducers:{[key:string]:Reducer<any>}, initialState:{[key:string]:any} = {}):any => {
+export const provideStore = (reducers:{[key:string]:Reducer<any>}, initialState:{[key:string]:any} = {}):any => {
 	
 	return [
-		provide(token, {useFactory: createStore(reducers, initialState), deps: [Dispatcher]}),
-		provide(Dispatcher, {useClass: Subject })];
+		provide(Store, {useFactory: createStore(reducers, initialState), deps: [Dispatcher]}),
+		Dispatcher
+	];
 
 }
 

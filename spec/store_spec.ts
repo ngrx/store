@@ -1,7 +1,7 @@
 declare var describe, it, expect, hot, cold, expectObservable, expectSubscriptions, console;
 require('es6-shim');
 import 'reflect-metadata';
-import {provideStore, Store, Dispatcher} from '../src/store';
+import {provideStore, Store, Dispatcher, Action} from '../src/store';
 import {Observable} from 'rxjs/Observable';
 import {Injector, provide} from 'angular2/core';
 
@@ -20,23 +20,23 @@ interface TodoAppSchema {
 }
 
 
+
 describe('ngRx Store', () => {
   
   describe('basic store actions', function() {
 
     let injector: Injector;
     let store: Store<TestAppSchema>;
-    let dispatcher: Dispatcher;
+    let dispatcher: Dispatcher<Action>;
 
     beforeEach(() => {
 
       injector = Injector.resolveAndCreate([
-        provideStore(Store, { counter1: counterStore, counter2: counterStore }, { counter1: 0, counter2: 1 })
+        provideStore({ counter1: counterStore, counter2: counterStore }, { counter1: 0, counter2: 1 })
       ]);
 
       store = injector.get(Store);
       dispatcher = injector.get(Dispatcher);
-
     });
 
     it('should provide an Observable Store', () => {
@@ -72,6 +72,24 @@ describe('ngRx Store', () => {
       const counterSteps = hot(actionSequence, actionValues);
 
       counterSteps.subscribe((action) => store.dispatch(action));
+
+      const counter1State = store.select('counter1');
+      const counter2State = store.select('counter2');
+
+      const stateSequence = '--v--w--x--y--z';
+      const counter1Values = { v: 1, w: 2, x: 1, y: 0, z: 1 }
+      const counter2Values = { v: 2, w: 3, x: 2, y: 0, z: 1 }
+
+      expectObservable(counter1State).toBe(stateSequence, counter1Values);
+      expectObservable(counter2State).toBe(stateSequence, counter2Values);
+
+    });
+    
+    it('should increment and decrement counter2 separately using the standalone dispatcher', function() {
+
+      const counterSteps = hot(actionSequence, actionValues);
+
+      counterSteps.subscribe((action) => dispatcher.dispatch(action));
 
       const counter1State = store.select('counter1');
       const counter2State = store.select('counter2');

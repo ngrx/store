@@ -2,13 +2,12 @@
   "name": "@ngrx/store",
   "version": "1.0.3",
   "description": "RxJS powered Redux for Angular2 apps",
-  "main": "store.js",
+  "main": "./dist/store.js",
   "scripts": {
     "test": "npm run build_test && jasmine",
     "clean_test": "rm -rf tmp/",
     "build_test": "npm run clean_test && tsc -p spec",
     "build_dist": "rm -rf dist && tsc",
-    "copy_pkg": "cp package.json dist/package.json && cp README.md dist/README.md && cp LICENSE dist/LICENSE",
     "prepublish": "npm run build_dist && npm run copy_pkg"
   },
   "repository": {
@@ -40,5 +39,5 @@
   "dependencies": {
     "rxjs": "^5.0.0-alpha.14"
   },
-  "typings": "store.d.ts"
+  "typings": "./dist/store.d.ts"
 }

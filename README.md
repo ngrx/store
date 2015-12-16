@@ -79,7 +79,7 @@ class MyApp {
 		this.store.dispatch({ action: INCREMENT });
 	}
 	decrement(){
-		this.store.dispatch({ action: INCREMENT });
+		this.store.dispatch({ action: DECREMENT });
 	}
 	
 }

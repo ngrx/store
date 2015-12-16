@@ -83,7 +83,32 @@ describe('ngRx Store', () => {
       expectObservable(counter2State).toBe(stateSequence, counter2Values);
 
     });
+    
+    it('should only push values when they change', function() {
+      
+      const actionSequence = '--a--b--c--d--e';
+      const actionValues = {
+        a: { type: INCREMENT },
+        b: { type: INCREMENT },
+        c: { type: 'SOME_IRRELEVANT VALUE_THING' },
+        d: { type: RESET },
+        e: { type: INCREMENT }
+      };
 
+      const counterSteps = hot(actionSequence, actionValues);
+
+      counterSteps.subscribe((action) => store.dispatch(action));
+
+      const counter1State = store.select('counter1');
+      
+      const stateSequence = 'i-v--w-----y--z';
+      const counter1Values = { i: 0, v: 1, w: 2, y: 0, z: 1 }
+      
+
+      expectObservable(counter1State).toBe(stateSequence, counter1Values);
+
+    });
+    
   });
 
 });

@@ -28,8 +28,8 @@ export class Store<T> extends BehaviorSubject<T> {
 		return this.map(state => state[key]).distinctUntilChanged();
 	}
 
-	next(action: any) {
-		this._dispatcher.next(action)
+	next(action: any): void {
+		this._dispatcher.next(action);
 	}
 
 	dispatch(action: Action): void {
@@ -38,7 +38,7 @@ export class Store<T> extends BehaviorSubject<T> {
 }
 
 export class Dispatcher<Action> extends Subject<Action> {
-	dispatch(action: Action) {
+	dispatch(action: Action): void {
 		this.next(action);
 	}
 }
@@ -52,8 +52,8 @@ export const provideStore = (reducers: { [key: string]: Reducer<any> }, initialS
 
 }
 
-const combineReducers = (reducers) => {
-	return (state, action) => {
+const combineReducers = (reducers: { [key: string]: Reducer<any> }) => {
+	return (state, action: Action) => {
 		return Object.keys(reducers).reduce((newState, key) => {
 			newState[key] = reducers[key](state[key], action);
 			return newState;

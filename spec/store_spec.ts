@@ -51,6 +51,33 @@ describe('ngRx Store', () => {
       d: { type: RESET },
       e: { type: INCREMENT }
     };
+    
+    it('should let you select state with a key name or selector function', function() {
+
+      const counterSteps = hot(actionSequence, actionValues);
+
+      counterSteps.subscribe((action) => store.dispatch(action));
+
+      const counterStateWithString = store.select('counter1');
+      const counterStateWithFunc = store.select(s => s.counter1);
+
+      const stateSequence = 'i-v--w--x--y--z';
+      const counter1Values = { i: 0, v: 1, w: 2, x: 1, y: 0, z: 1 }
+
+      expectObservable(counterStateWithString).toBe(stateSequence, counter1Values);
+      expectObservable(counterStateWithFunc).toBe(stateSequence, counter1Values);
+
+    });
+    
+    it('should throw a type error if you attempt to select state without a valid key name or selector function', function(){
+      
+      const select = value => () => store.select(value);
+      
+      expect(select(undefined)).toThrowError(TypeError, /got undefined/);
+      expect(select({})).toThrowError(TypeError, /got object/);
+      expect(select(true)).toThrowError(TypeError, /got boolean/);
+      
+    });
 
     it('should appropriately handle initial state', () => {
 
@@ -161,7 +188,7 @@ describe('ngRx Store', () => {
 
       counterSteps.subscribe((action) => store.dispatch(action));
 
-      const counter1State = store.select('counter1');
+      const counter1State = store.select(s => s.counter1);
       
       const stateSequence = 'i-v--w-----y--z';
       const counter1Values = { i: 0, v: 1, w: 2, y: 0, z: 1 }
@@ -170,7 +197,5 @@ describe('ngRx Store', () => {
       expectObservable(counter1State).toBe(stateSequence, counter1Values);
 
     });
-    
   });
-
 });

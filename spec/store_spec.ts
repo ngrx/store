@@ -94,6 +94,40 @@ describe('ngRx Store', () => {
 
     });
 
+    it('should increment and decrement counter1 using a created action', function() {
+
+      const counterSteps = hot(actionSequence, actionValues);
+
+      const incrementAction = store.createAction(INCREMENT);
+      const decrementAction = store.createAction(DECREMENT);
+      const resetAction = store.createAction(RESET);
+
+      counterSteps.subscribe((action) => {
+        switch(action.type){
+          case INCREMENT:
+            incrementAction();
+            break;
+          case DECREMENT:
+            decrementAction();
+            break;
+          case RESET:
+            resetAction();
+            break;
+
+        }
+      });
+
+
+
+      const counterState = store.select('counter1');
+
+      const stateSequence = 'i-v--w--x--y--z';
+      const counter1Values = { i: 0, v: 1, w: 2, x: 1, y: 0, z: 1 }
+
+      expectObservable(counterState).toBe(stateSequence, counter1Values);
+
+    });
+
     it('should increment and decrement counter2 separately', function() {
 
       const counterSteps = hot(actionSequence, actionValues);

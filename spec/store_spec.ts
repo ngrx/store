@@ -36,6 +36,7 @@ describe('ngRx Store', () => {
       ]);
 
       store = injector.get(Store);
+      dispatcher = injector.get(Dispatcher);
     });
 
     it('should provide an Observable Store', () => {
@@ -51,11 +52,38 @@ describe('ngRx Store', () => {
       e: { type: INCREMENT }
     };
 
+    it('should appropriately handle initial state', () => {
+
+      expect(store.value).toEqual({ counter1: 0, counter2: 1 });
+
+    });
+
+    it('should appropriately handle initial state via subscription', () => {
+      store.subscribe(initialState => {
+        expect(initialState).toEqual({ counter1: 0, counter2: 1 });
+      });
+    });
+
     it('should increment and decrement counter1', function() {
 
       const counterSteps = hot(actionSequence, actionValues);
 
       counterSteps.subscribe((action) => store.dispatch(action));
+
+      const counterState = store.select('counter1');
+
+      const stateSequence = 'i-v--w--x--y--z';
+      const counter1Values = { i: 0, v: 1, w: 2, x: 1, y: 0, z: 1 }
+
+      expectObservable(counterState).toBe(stateSequence, counter1Values);
+
+    });
+
+    it('should increment and decrement counter1 using the dispatcher', function() {
+
+      const counterSteps = hot(actionSequence, actionValues);
+
+      counterSteps.subscribe((action) => dispatcher.dispatch(action));
 
       const counterState = store.select('counter1');
 
@@ -84,7 +112,7 @@ describe('ngRx Store', () => {
 
     });
     
-    it('should only push values when they change', function() {
+    it('should only push values when they change when .select() is used', function() {
       
       const actionSequence = '--a--b--c--d--e';
       const actionValues = {

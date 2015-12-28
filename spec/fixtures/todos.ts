@@ -1,6 +1,9 @@
 export const ADD_TODO = 'ADD_TODO';
 export const COMPLETE_TODO = 'COMPLETE_TODO'
 export const SET_VISIBILITY_FILTER = 'SET_VISIBILITY_FILTER'
+export const COMPLETE_ALL_TODOS = 'COMPLETE_ALL_TODOS'
+
+let _id = 0;
 
 export const VisibilityFilters = {
   SHOW_ALL: 'SHOW_ALL',
@@ -8,45 +11,32 @@ export const VisibilityFilters = {
   SHOW_ACTIVE: 'SHOW_ACTIVE'
 }
 
-export function addTodo(text) {
-  return { type: ADD_TODO, text }
-}
-
-export function completeTodo(index) {
-  return { type: COMPLETE_TODO, index }
-}
-
-export function setVisibilityFilter(filter) {
-  return { type: SET_VISIBILITY_FILTER, filter }
-}
-
-export function visibilityFilter(state = VisibilityFilters.SHOW_ALL, action) {
-  switch (action.type) {
+export function visibilityFilter(state = VisibilityFilters.SHOW_ALL, {type, payload}) {
+  switch (type) {
     case SET_VISIBILITY_FILTER:
-      return action.filter
+      return payload;
     default:
       return state
   }
 }
 
-export function todos(state = [], action) {
-  switch (action.type) {
+export function todos(state = [], {type, payload}) {
+  switch (type) {
     case ADD_TODO:
       return [
         ...state,
         {
-          text: action.text,
+          id: ++_id,
+          text: payload.text,
           completed: false
         }
       ]
+    case COMPLETE_ALL_TODOS:
+      return state.map(todo => Object.assign({}, todo, {completed: true}))
     case COMPLETE_TODO:
-      return [
-        ...state.slice(0, action.index),
-        Object.assign({}, state[action.index], {
-          completed: true
-        }),
-        ...state.slice(action.index + 1)
-      ]
+      return state.map(todo => {
+        return todo.id === payload.id ? Object.assign({}, todo, {completed: true}) : todo;
+      });
     default:
       return state
   }

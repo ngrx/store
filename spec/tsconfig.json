@@ -9,10 +9,7 @@
 	},
 	"files": [
 		"helpers/test-helper.ts",
+    "integration_spec.ts",
 		"store_spec.ts"
-	],
-	"exclude": [
-		"../node_modules",
-		"../node_modules/angular2/typings/**"
 	]
 }

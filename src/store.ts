@@ -21,8 +21,23 @@ export class Store<T> extends BehaviorSubject<T> {
     super(initialState);
 	}
 
-	select<T, R>(key: string): Observable<R> {
-		return this.map(state => state[key]).distinctUntilChanged();
+	select<R>(keyOrSelector: ((state: T) => R) | string | number | symbol): Observable<R> {
+		if(
+			typeof keyOrSelector === 'string' || 
+			typeof keyOrSelector === 'number' || 
+			typeof keyOrSelector === 'symbol'
+		){
+			return this.map(state => state[keyOrSelector]).distinctUntilChanged();
+		}
+		else if(typeof keyOrSelector === 'function'){
+			return this.map(keyOrSelector).distinctUntilChanged();
+		}
+		else{
+			throw new TypeError(
+				  `Store@select Unknown Parameter Type: `
+				+ `Expected type of function or valid key type, got ${typeof keyOrSelector}`
+			);
+		}
 	}
   
   dispatch(action: Action): void {

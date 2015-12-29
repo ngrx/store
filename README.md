@@ -21,23 +21,19 @@ export const DECREMENT = 'DECREMENT';
 export const RESET = 'RESET';
 
 export const counter:Reducer<number> = (state:number = 0, action:Action) => {
-	
+
 	switch (action.type) {
 		case INCREMENT:
 			return state + 1;
-			break;
-		
+
 		case DECREMENT:
 			return state - 1;
-			break;
-			
+
 		case RESET:
 			return 0;
-			break;
-	
+
 		default:
 			return state;
-			break;
 	}
 }
 ```

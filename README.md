@@ -72,13 +72,13 @@ class MyApp {
 		this.counter = store.select('counter');
 	}
 	increment(){
-		this.store.dispatch({ action: INCREMENT });
+		this.store.dispatch({ type: INCREMENT });
 	}
 	decrement(){
-		this.store.dispatch({ action: DECREMENT });
+		this.store.dispatch({ type: DECREMENT });
 	}
 	reset(){
-		this.store.dispatch({ action: RESET });
+		this.store.dispatch({ type: RESET });
 	}
 }
 

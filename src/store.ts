@@ -70,9 +70,18 @@ export const createStore = (reducers: { [key: string]: Reducer<any> }, initialSt
 	return (dispatcher:Dispatcher<any>) => {
     
     const storeKeys = Object.keys(reducers);
-    const initialStateKeys = Object.keys(initialState);
 
-    const _stores = Object.keys(reducers).map(key =>  dispatcher.scan(reducers[key],initialState[key]));
+    const _stores = Object.keys(reducers).map(key =>  {
+      const reducer = reducers[key];
+      let initialReducerState = initialState[key];
+
+      if(!initialReducerState && typeof initialReducerState === 'undefined'){
+        initialReducerState = reducer(undefined, {type: '__init'});
+        initialState[key] = initialReducerState;
+      }
+
+      return dispatcher.scan(reducer, initialReducerState);
+    });
     
     const store = new Store(dispatcher, initialState);
 
@@ -80,7 +89,7 @@ export const createStore = (reducers: { [key: string]: Reducer<any> }, initialSt
       return storeKeys.reduce((state, key, i) => {
         state[storeKeys[i]] = values[i];
         return state;
-      },{})
+      },{});
     }).subscribe(store);
 
     return store;

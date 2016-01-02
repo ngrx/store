@@ -10,6 +10,7 @@ import {counterReducer, INCREMENT, DECREMENT, RESET} from './fixtures/counter';
 interface TestAppSchema {
   counter1: number;
   counter2: number;
+  counter3: number;
 }
 
 interface Todo {}
@@ -32,7 +33,7 @@ describe('ngRx Store', () => {
     beforeEach(() => {
 
       injector = Injector.resolveAndCreate([
-        provideStore({ counter1: counterReducer, counter2: counterReducer }, { counter1: 0, counter2: 1 })
+        provideStore({ counter1: counterReducer, counter2: counterReducer, counter3: counterReducer }, { counter1: 0, counter2: 1 })
       ]);
 
       store = injector.get(Store);
@@ -81,13 +82,14 @@ describe('ngRx Store', () => {
 
     it('should appropriately handle initial state', () => {
 
-      expect(store.value).toEqual({ counter1: 0, counter2: 1 });
+      expect(store.value).toEqual({ counter1: 0, counter2: 1, counter3: 0 });
 
     });
 
+
     it('should appropriately handle initial state via subscription', () => {
       store.subscribe(initialState => {
-        expect(initialState).toEqual({ counter1: 0, counter2: 1 });
+        expect(initialState).toEqual({ counter1: 0, counter2: 1, counter3: 0 });
       });
     });
 

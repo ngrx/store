@@ -6,6 +6,10 @@
 
 RxJS powered Redux for Angular2 apps
 
+### Demo
+
+http://plnkr.co/edit/Hb4pJP3jGtOp6b7JubzS?p=preview
+
 ### installation
 - Make sure you have angular2 installed via npm : `npm install angular`
 - Install from npm : `npm install @ngrx/store`

@@ -1,4 +1,5 @@
 import {Observable} from 'rxjs/Observable';
+import {Subscription} from 'rxjs/Subscription';
 import {BehaviorSubject} from 'rxjs/subject/BehaviorSubject';
 import {Subject} from 'rxjs/Subject';
 import {provide} from 'angular2/core';
@@ -16,10 +17,51 @@ export interface Reducer<T> {
 }
 
 export class Store<T> extends BehaviorSubject<T> {
-	_reducer: Reducer<any>;
-	constructor(private _dispatcher:Dispatcher<Action>, initialState: T) {
+	private _storeSubscription: Subscription<T>
+	constructor(private _dispatcher:Dispatcher<Action>, private _reducers:{[key:string]:Reducer<any>}, initialState: T) {
     super(initialState);
+    let rootReducer = this._mergeReducers(_reducers, initialState);
+    this._storeSubscription = rootReducer.subscribe(this);
 	}
+  
+  addReducer(key:string, reducer:Reducer<any>, initialState?:any){
+    let currentState = this.value;
+    let newState = Object.assign(currentState, {[key]: initialState});
+    
+    if(this._storeSubscription){
+      this._dispatcher.remove(this._storeSubscription);
+      this._storeSubscription = null;
+    }
+    this._reducers = Object.assign(this._reducers, {[key]: reducer});
+    let newRootReducer = this._mergeReducers(this._reducers, newState);
+    this.next(newState);
+    this._storeSubscription = newRootReducer.subscribe(this);
+    
+  }
+  
+  private _mergeReducers(reducers, initialState){
+    const storeKeys = Object.keys(reducers);
+
+    const _stores = Object.keys(reducers).map(key =>  {
+      const reducer = reducers[key];
+      let initialReducerState = initialState[key];
+
+      if(!initialReducerState && typeof initialReducerState === 'undefined'){
+        initialReducerState = reducer(undefined, {type: '__init'});
+        initialState[key] = initialReducerState;
+      }
+
+      return this._dispatcher.scan(reducer, initialReducerState);
+    });
+    
+    return Observable.zip(..._stores, (...values) => {
+      return storeKeys.reduce((state, key, i) => {
+        state[storeKeys[i]] = values[i];
+        return state;
+      },{});
+    });
+    
+  }
 
 	select<R>(keyOrSelector: ((state: T) => R) | string | number | symbol): Observable<R> {
 		if(
@@ -68,30 +110,6 @@ export const provideStore = (reducers: { [key: string]: Reducer<any> }, initialS
 
 export const createStore = (reducers: { [key: string]: Reducer<any> }, initialState: { [key: string]: any } = {}) => {
 	return (dispatcher:Dispatcher<any>) => {
-    
-    const storeKeys = Object.keys(reducers);
-
-    const _stores = Object.keys(reducers).map(key =>  {
-      const reducer = reducers[key];
-      let initialReducerState = initialState[key];
-
-      if(!initialReducerState && typeof initialReducerState === 'undefined'){
-        initialReducerState = reducer(undefined, {type: '__init'});
-        initialState[key] = initialReducerState;
-      }
-
-      return dispatcher.scan(reducer, initialReducerState);
-    });
-    
-    const store = new Store(dispatcher, initialState);
-
-    Observable.zip(..._stores, (...values) => {
-      return storeKeys.reduce((state, key, i) => {
-        state[storeKeys[i]] = values[i];
-        return state;
-      },{});
-    }).subscribe(store);
-
-    return store;
-	}
+    return new Store(dispatcher, reducers, initialState);
+  }
 }

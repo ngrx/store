@@ -32,7 +32,7 @@
     "jasmine": "^2.4.1",
     "jasmine-core": "^2.4.1",
     "lodash": "^3.10.1",
-    "reflect-metadata": "^0.1.2",
+    "reflect-metadata": "0.1.2",
     "typescript": "^1.7.3",
     "zone.js": "0.5.10"
   },

@@ -24,15 +24,26 @@ export class Store<T> extends BehaviorSubject<T> {
     this._storeSubscription = rootReducer.subscribe(this);
 	}
 
-  addReducer(key:string, reducer:Reducer<any>, initialState?:any){
-    let currentState = this.value;
-    let newState = Object.assign(currentState, {[key]: initialState});
+  /**
+   * It allows to add or update a reducer and its initial state on the fly
+   * It can be used when you need to load new parts of your store that are
+   * not available when the Store is created at startup
+   * @param reducer the function(s) to be added
+   * @param initialState the optional dictionary representing the state the new reducer
+   * should assume
+     */
+  replaceReducer(reducer:{[key:string] : Reducer<any>}, initialState?:any){
+    let newState:T = this.value;
+    Object.keys(reducer).map(key => {
+      newState = Object.assign(newState, { [key]: initialState[key]});
+    });
+
 
     if(this._storeSubscription){
       this._dispatcher.remove(this._storeSubscription);
       this._storeSubscription = null;
     }
-    this._reducers = Object.assign(this._reducers, {[key]: reducer});
+    this._reducers = Object.assign(this._reducers, reducer);
     let newRootReducer = this._mergeReducers(this._reducers, newState);
     this.next(newState);
     this._storeSubscription = newRootReducer.subscribe(this);

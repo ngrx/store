@@ -199,5 +199,57 @@ describe('ngRx Store', () => {
       expectObservable(counter1State).toBe(stateSequence, counter1Values);
 
     });
+
+    it('should allow you to add a reducer later', function() {
+
+      let currentState;
+
+      store.subscribe(state => {
+        currentState = state;
+      });
+
+      expect(currentState).toEqual({counter1: 0, counter2: 1, counter3: 0});
+      store.dispatch({type: INCREMENT});
+      expect(currentState).toEqual({counter1: 1, counter2: 2, counter3: 1});
+
+      store.replaceReducer({'dynamicCounter' : counterReducer}, {'dynamicCounter' : 1});
+
+      expect(currentState).toEqual({counter1: 1, counter2: 2, counter3: 1, dynamicCounter: 1});
+
+      store.dispatch({type: INCREMENT});
+
+      expect(currentState).toEqual({counter1: 2, counter2: 3, counter3: 2, dynamicCounter: 2});
+
+    });
+
+    it('should allow you to update a reducer later', function() {
+
+      let currentState;
+
+      store.subscribe(state => {
+        currentState = state;
+      });
+
+      expect(currentState).toEqual({counter1: 0, counter2: 1, counter3: 0});
+      store.dispatch({type: INCREMENT});
+      expect(currentState).toEqual({counter1: 1, counter2: 2, counter3: 1});
+
+      let replacedReducers:{[key:string] : any} = {};
+      replacedReducers['counter3'] = counterReducer;
+      replacedReducers['counter2'] = counterReducer;
+
+      let replacedState = {};
+      replacedState['counter3'] = 1;
+      // the state of 'counter2' is omitted to test that the initial state is optional
+
+      store.replaceReducer(replacedReducers, replacedState);
+
+      expect(currentState).toEqual({counter1: 1, counter2: 0, counter3:1});
+
+      store.dispatch({type: INCREMENT});
+
+      expect(currentState).toEqual({counter1: 2, counter2: 1, counter3: 2});
+
+    });
   });
 });

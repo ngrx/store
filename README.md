@@ -4,7 +4,7 @@
 [ ![Codeship Status for ngrx/store](https://img.shields.io/codeship/0c4f5b50-8372-0133-b304-425351b234ba/master.svg)](https://codeship.com/projects/121789)
 [![npm version](https://badge.fury.io/js/%40ngrx%2Fstore.svg)](https://badge.fury.io/js/%40ngrx%2Fstore)
 
-RxJS powered Redux for Angular2 apps
+RxJS powered state management inspired by Redux for Angular2 apps
 
 ### Demo
 

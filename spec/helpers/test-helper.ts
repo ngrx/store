@@ -1,13 +1,10 @@
-//Fail timeouts faster
-//Individual suites/specs should specify longer timeouts if needed.
-
 declare var global, require, Symbol;
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 5000;
 
-var _ = require('lodash');
-var root = require('rxjs/util/root').root;
-var Rx = require('rxjs/Rx.KitchenSink');
+const _ = require('lodash');
+const root = require('rxjs/util/root').root;
+const Rx = require('rxjs/Rx.KitchenSink');
 
 import marbleHelpers from './marble-testing';
 
@@ -17,13 +14,13 @@ global.hot = marbleHelpers.hot;
 global.expectObservable = marbleHelpers.expectObservable;
 global.expectSubscriptions = marbleHelpers.expectSubscriptions;
 
-var assertDeepEqual = marbleHelpers.assertDeepEqual;
+const assertDeepEqual = marbleHelpers.assertDeepEqual;
 
-var glit = global.it;
+const glit = global.it;
 
-global.it = function (description, cb, timeout) {
+global.it = function(description, cb, timeout) {
   if (cb.length === 0) {
-    glit(description, function () {
+    glit(description, function() {
       global.rxTestScheduler = new Rx.TestScheduler(assertDeepEqual);
       cb();
       global.rxTestScheduler.flush();
@@ -33,15 +30,15 @@ global.it = function (description, cb, timeout) {
   }
 };
 
-global.it.asDiagram = function () {
+global.it.asDiagram = function() {
   return global.it;
 };
 
-var glfit = global.fit;
+const glfit = global.fit;
 
-global.fit = function (description, cb, timeout) {
+global.fit = function(description, cb, timeout) {
   if (cb.length === 0) {
-    glfit(description, function () {
+    glfit(description, function() {
       global.rxTestScheduler = new Rx.TestScheduler(assertDeepEqual);
       cb();
       global.rxTestScheduler.flush();
@@ -52,34 +49,34 @@ global.fit = function (description, cb, timeout) {
 };
 
 function stringify(x) {
-  return JSON.stringify(x, function (key, value) {
+  return JSON.stringify(x, function(key, value) {
     if (Array.isArray(value)) {
       return '[' + value
-        .map(function (i) {
+        .map(function(i) {
           return '\n\t' + stringify(i);
         }) + '\n]';
     }
     return value;
   })
-  .replace(/\\"/g, '"')
-  .replace(/\\t/g, '\t')
-  .replace(/\\n/g, '\n');
+    .replace(/\\"/g, '"')
+    .replace(/\\t/g, '\t')
+    .replace(/\\n/g, '\n');
 }
 
-beforeEach(function () {
+beforeEach(function() {
   jasmine.addMatchers({
-    toDeepEqual: function (util, customEqualityTesters) {
+    toDeepEqual: function(util, customEqualityTesters) {
       return {
-        compare: function (actual, expected) {
-          var result:any = { pass: _.isEqual(actual, expected) };
+        compare: function(actual, expected) {
+          let result: any = { pass: _.isEqual(actual, expected) };
 
           if (!result.pass && Array.isArray(actual) && Array.isArray(expected)) {
             result.message = 'Expected \n';
-            actual.forEach(function (x) {
+            actual.forEach(function(x) {
               result.message += stringify(x) + '\n';
             });
             result.message += '\nto deep equal \n';
-            expected.forEach(function (x) {
+            expected.forEach(function(x) {
               result.message += stringify(x) + '\n';
             });
           }
@@ -91,16 +88,16 @@ beforeEach(function () {
   });
 });
 
-afterEach(function () {
+afterEach(function() {
   global.rxTestScheduler = null;
 });
 
-(function () {
+(function() {
   Object.defineProperty(Error.prototype, 'toJSON', {
-    value: function () {
-      var alt = {};
+    value: function() {
+      let alt = {};
 
-      Object.getOwnPropertyNames(this).forEach(function (key) {
+      Object.getOwnPropertyNames(this).forEach(function(key) {
         if (key !== 'stack') {
           alt[key] = this[key];
         }
@@ -114,18 +111,18 @@ afterEach(function () {
 })();
 
 global.lowerCaseO = function lowerCaseO() {
-  var values = [].slice.apply(arguments);
+  const values = [].slice.apply(arguments);
 
-  var o = {
-    subscribe: function (observer) {
-      values.forEach(function (v) {
+  const o = {
+    subscribe: function(observer) {
+      values.forEach(function(v) {
         observer.next(v);
       });
       observer.complete();
     }
   };
 
-  o[(<any> Symbol).observable] = function () {
+  o[(<any>Symbol).observable] = function() {
     return this;
   };
 

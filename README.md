@@ -74,7 +74,7 @@ import {INCREMENT, DECREMENT, RESET} from './counter';
 })
 class MyApp {
 	counter: Observable<number>;
-	constructor(public store: Store){
+	constructor(public store: Store<number>){
 		this.counter = store.select('counter');
 	}
 	increment(){

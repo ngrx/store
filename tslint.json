@@ -40,7 +40,8 @@
         ],
         "variable-name": [
             true,
-            "ban-keywords"
+            "ban-keywords",
+            "allow-leading-underscore"
         ],
         "whitespace": [
             true,

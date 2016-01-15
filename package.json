@@ -1,6 +1,6 @@
 {
   "name": "@ngrx/store",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "RxJS powered Redux for Angular2 apps",
   "main": "./dist/store.js",
   "scripts": {

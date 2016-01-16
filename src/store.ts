@@ -5,7 +5,11 @@ import {Subject} from 'rxjs/Subject';
 import {provide} from 'angular2/core';
 import {Operator} from 'rxjs/Operator';
 
-import 'rxjs/Rx';
+//store specific operators
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/distinctUntilChanged';
+import 'rxjs/add/operator/scan';
+import 'rxjs/add/operator/zip-static';
 
 export interface Action {
   type: string;

@@ -4,7 +4,7 @@ jasmine.DEFAULT_TIMEOUT_INTERVAL = 5000;
 
 const _ = require('lodash');
 const root = require('rxjs/util/root').root;
-const Rx = require('rxjs/Rx.KitchenSink');
+import {TestScheduler} from 'rxjs/testing/TestScheduler';
 
 import marbleHelpers from './marble-testing';
 
@@ -21,7 +21,7 @@ const glit = global.it;
 global.it = function(description, cb, timeout) {
   if (cb.length === 0) {
     glit(description, function() {
-      global.rxTestScheduler = new Rx.TestScheduler(assertDeepEqual);
+      global.rxTestScheduler = new TestScheduler(assertDeepEqual);
       cb();
       global.rxTestScheduler.flush();
     });
@@ -39,7 +39,7 @@ const glfit = global.fit;
 global.fit = function(description, cb, timeout) {
   if (cb.length === 0) {
     glfit(description, function() {
-      global.rxTestScheduler = new Rx.TestScheduler(assertDeepEqual);
+      global.rxTestScheduler = new TestScheduler(assertDeepEqual);
       cb();
       global.rxTestScheduler.flush();
     });

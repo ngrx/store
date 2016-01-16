@@ -4,6 +4,7 @@ import 'reflect-metadata';
 import {provideStore, Store, Dispatcher, Action} from '../src/store';
 import {Observable} from 'rxjs/Observable';
 import {Injector, provide} from 'angular2/core';
+import 'rxjs/add/operator/combineLatest-static';
 
 import {counterReducer, INCREMENT, DECREMENT, RESET} from './fixtures/counter';
 import {todos, visibilityFilter, VisibilityFilters, SET_VISIBILITY_FILTER, ADD_TODO, COMPLETE_TODO, COMPLETE_ALL_TODOS} from './fixtures/todos';

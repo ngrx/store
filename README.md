@@ -11,7 +11,7 @@ RxJS powered state management inspired by Redux for Angular2 apps
 http://plnkr.co/edit/Hb4pJP3jGtOp6b7JubzS?p=preview
 
 ### installation
-- Make sure you have angular2 installed via npm : `npm install angular`
+- Make sure you have angular2 installed via npm : `npm install angular2`
 - Install from npm : `npm install @ngrx/store`
 
 ### usage

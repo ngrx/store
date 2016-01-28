@@ -5,6 +5,7 @@
   "main": "./dist/store.js",
   "scripts": {
     "test": "npm run build_test && jasmine",
+    "clean-ng2": "rimraf node_modules/angular2/manual_typings node_modules/angular2/typings",
     "clean_test": "rm -rf tmp/",
     "build_test": "npm run clean_test && tsc -p spec",
     "build_dist": "rm -rf dist && tsc",
@@ -27,18 +28,20 @@
   },
   "homepage": "https://github.com/ngrx/store#readme",
   "devDependencies": {
-    "angular2": "^2.0.0-beta.0",
+    "angular2": "2.0.0-beta.0",
     "es6-promise": "^3.0.2",
     "es6-shim": "^0.33.13",
     "jasmine": "^2.4.1",
     "jasmine-core": "^2.4.1",
     "lodash": "^3.10.1",
     "reflect-metadata": "0.1.2",
+    "rimraf": "^2.5.1",
     "typescript": "^1.7.3",
+    "typings": "^0.6.6",
     "zone.js": "0.5.10"
   },
   "dependencies": {
-    "rxjs": "^5.0.0-beta.0"
+    "rxjs": "5.0.0-beta.0"
   },
   "typings": "./dist/store.d.ts"
 }

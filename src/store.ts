@@ -21,7 +21,7 @@ export interface Reducer<T> {
 }
 
 export class Store<T> extends BehaviorSubject<T> {
-	private _storeSubscription: Subscription<T>
+  private _storeSubscription: Subscription<T>;
 	constructor(private _dispatcher:Dispatcher<Action>, private _reducers:{[key:string]:Reducer<any>}, initialState: T) {
     super(initialState);
     let rootReducer = this._mergeReducers(_reducers, initialState);

@@ -9,6 +9,7 @@
 		"declaration": true
 	},
 	"files": [
+    "typings/main.d.ts",
 		"src/store.ts"
 	],
 	"exclude": [

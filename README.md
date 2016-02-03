@@ -54,7 +54,7 @@ import {App} from './myapp';
 
 import {counter} from './counter';
 
-bootstrap(App, [ provideStore({counter}, {counter: 0}) ];
+bootstrap(App, [ provideStore({counter}, {counter: 0}) ]);
 
 ```
 

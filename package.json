@@ -3,6 +3,7 @@
   "version": "1.2.1",
   "description": "RxJS powered Redux for Angular2 apps",
   "main": "./dist/store.js",
+  "registry": "npm",
   "scripts": {
     "test": "npm run build_test && jasmine",
     "clean_test": "rm -rf tmp/",

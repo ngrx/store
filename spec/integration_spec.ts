@@ -1,7 +1,7 @@
 declare var describe, it, expect, hot, cold, expectObservable, expectSubscriptions, console;
 require('es6-shim');
 import 'reflect-metadata';
-import {provideStore, Store, Dispatcher, Action} from '../src/store';
+import {Store, Action, combineReducers, createStore} from '../src/index';
 import {Observable} from 'rxjs/Observable';
 import {Injector, provide} from 'angular2/core';
 import 'rxjs/add/operator/combineLatest-static';
@@ -26,16 +26,14 @@ describe('ngRx Integration spec', () => {
 
     let injector: Injector;
     let store: Store<TodoAppSchema>;
-    let dispatcher: Dispatcher<Action>;
     let currentState: TodoAppSchema;
 
     injector = Injector.resolveAndCreate([
-      provideStore({ todos, visibilityFilter }, { todos: [], visibilityFilter: VisibilityFilters.SHOW_ALL })
+      provide(Store, createStore(combineReducers({ todos, visibilityFilter }), { todos: [], visibilityFilter: VisibilityFilters.SHOW_ALL }))
     ]);
 
     store = injector.get(Store);
-    dispatcher = injector.get(Dispatcher);
-
+    
     store.subscribe(state => {
       currentState = state;
     });

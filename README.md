@@ -90,6 +90,10 @@ class MyApp {
 
 ```
 
+## Contributing
+
+Please read [contributing guidelines here](https://github.com/ngrx/store/blob/master/CONTRIBUTING.md).
+
 
 
 

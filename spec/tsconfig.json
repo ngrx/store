@@ -8,6 +8,7 @@
 		"outDir": "../tmp"
 	},
 	"files": [
+    "../typings/main.d.ts",
 		"helpers/test-helper.ts",
     "integration_spec.ts",
 		"store_spec.ts"

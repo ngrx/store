@@ -1,10 +1,10 @@
 declare var describe, it, expect, hot, cold, expectObservable, expectSubscriptions, console;
 require('es6-shim');
 import 'reflect-metadata';
-import {Store, Action, combineReducers, createStore} from '../src/index';
+import {Store, Action, combineReducers, provideStore} from '../src/index';
 import {Observable} from 'rxjs/Observable';
 import {Injector, provide} from 'angular2/core';
-import 'rxjs/add/operator/combineLatest-static';
+import 'rxjs/add/observable/combineLatest';
 
 import {counterReducer, INCREMENT, DECREMENT, RESET} from './fixtures/counter';
 import {todos, visibilityFilter, VisibilityFilters, SET_VISIBILITY_FILTER, ADD_TODO, COMPLETE_TODO, COMPLETE_ALL_TODOS} from './fixtures/todos';
@@ -29,7 +29,7 @@ describe('ngRx Integration spec', () => {
     let currentState: TodoAppSchema;
 
     injector = Injector.resolveAndCreate([
-      provide(Store, createStore(combineReducers({ todos, visibilityFilter }), { todos: [], visibilityFilter: VisibilityFilters.SHOW_ALL }))
+      provideStore({ todos, visibilityFilter }, { todos: [], visibilityFilter: VisibilityFilters.SHOW_ALL })
     ]);
 
     store = injector.get(Store);

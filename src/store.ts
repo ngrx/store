@@ -1,4 +1,5 @@
 import {Action, Reducer, StoreCreator} from './interfaces';
+import {combineReducers} from './utils'
 
 import {Observable} from 'rxjs/Observable';
 import {Subscription} from 'rxjs/Subscription';
@@ -9,26 +10,45 @@ import {Operator} from 'rxjs/Operator';
 //store specific operators
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/distinctUntilChanged';
+import 'rxjs/add/operator/scan';
+import 'rxjs/add/operator/do';
 
-const ActionTypes = {
-  SET_STATE: '@@ngrx/setState',
-  INIT: '@@ngrx/init'
+
+//public injectable dispatcher
+export class Dispatcher extends Subject<any> {
+  dispatch(action) {
+    this.next(action);
+  }
 }
 
-export class Store<T> extends BehaviorSubject<T> {
+const createActionStream = dispatcher => dispatcher;
 
-  private _storeSubscription: Subscription<T>;
-  private _reducer: Reducer<any>
-  
-  constructor(_reducer: Reducer<T>, initialState: T) {
-    super(_reducer(initialState, {type: ActionTypes.INIT}));
-    this._reducer = _reducer;
+
+
+
+export class Store<T> extends BehaviorSubject<T> {
+  private _sub: Subscription;
+  private _rootReducer: Reducer<any>;
+  private _reducers: any;
+  private _dispatcher: Dispatcher;
+  constructor(_dispatcher: Dispatcher, _reducers: any, initialState = {}) {
+    const rootReducer = combineReducers(_reducers);
+    super(rootReducer(initialState, { type: '@@ngrx/INIT' }));
+    this._rootReducer = rootReducer;
+    this._reducers = _reducers;
+    this._dispatcher = _dispatcher;
+    this.initialize(this.value);
   }
 
-  next(action:any){
-    const currentState = this.value;
-    const newState = this._reducer(currentState, action);
-    super.next(newState);
+  initialize(initialState) {
+    if (this._sub) {
+      this._sub.unsubscribe();
+    }
+    this._sub = this._dispatcher.scan(this._rootReducer, initialState).subscribe(state => super.next(state));
+  }
+
+  next(action: any) {
+    this._dispatcher.next(action);
   }
 
   select<R>(keyOrSelector: ((state: T) => R) | string | number | symbol): Observable<R> {
@@ -54,16 +74,32 @@ export class Store<T> extends BehaviorSubject<T> {
     this.next(action);
   }
 
-  replaceReducer(reducer:Reducer<any>){
-    this._reducer = reducer;
-    this.dispatch({type: ActionTypes.INIT});
+  replaceReducers(reducers: any) {
+    this._reducers = Object.assign({}, this._reducers, reducers);
+    this._rootReducer = combineReducers(this._reducers);
+    let newState = this._rootReducer(Object.assign({}, this.value), { type: '@@init' });
+    this.initialize(newState);
+    super.next(newState);
   }
 
-  getState(){
+  getState() {
     return this.value;
   }
 }
 
-export const createStore = (reducer, initialState?:any) => {
-  return {useValue:new Store(reducer, initialState)}
+
+
+
+export const provideStoreFn = (provide) => (reducers: any, initialState?: any) => {
+
+  const createInternalStore = (dispatcher) => {
+    return new Store(dispatcher, reducers, initialState);
+  }
+
+
+  const providedStore = provide(Store, { useFactory: createInternalStore, deps: [Dispatcher] })
+
+
+  return [Dispatcher, providedStore];
+
 }

@@ -1,7 +1,7 @@
 declare var describe, it, expect, hot, cold, expectObservable, expectSubscriptions, console, beforeEach;
 require('es6-shim');
 import 'reflect-metadata';
-import {Store, Action, combineReducers, createStore} from '../src/index';
+import {Store, Dispatcher, Action, provideStore} from '../src/index';
 import {Observable} from 'rxjs/Observable';
 import {Injector, provide} from 'angular2/core';
 
@@ -28,14 +28,16 @@ describe('ngRx Store', () => {
 
     let injector: Injector;
     let store: Store<TestAppSchema>;
+    let dispatcher:Dispatcher;
 
     beforeEach(() => {
 
       injector = Injector.resolveAndCreate([
-        provide(Store, createStore(combineReducers({ counter1: counterReducer, counter2: counterReducer, counter3: counterReducer }), { counter1: 0, counter2: 1 }))
+        provideStore({ counter1: counterReducer, counter2: counterReducer, counter3: counterReducer }, { counter1: 0, counter2: 1 })
       ]);
 
       store = injector.get(Store);
+      dispatcher = injector.get(Dispatcher);
 
     });
 
@@ -107,20 +109,20 @@ describe('ngRx Store', () => {
 
     });
 
-    // it('should increment and decrement counter1 using the dispatcher', function() {
+    it('should increment and decrement counter1 using the dispatcher', function() {
 
-    //   const counterSteps = hot(actionSequence, actionValues);
+      const counterSteps = hot(actionSequence, actionValues);
 
-    //   counterSteps.subscribe((action) => dispatcher.dispatch(action));
+      counterSteps.subscribe((action) => dispatcher.dispatch(action));
 
-    //   const counterState = store.select('counter1');
+      const counterState = store.select('counter1');
 
-    //   const stateSequence = 'i-v--w--x--y--z';
-    //   const counter1Values = { i: 0, v: 1, w: 2, x: 1, y: 0, z: 1 };
+      const stateSequence = 'i-v--w--x--y--z';
+      const counter1Values = { i: 0, v: 1, w: 2, x: 1, y: 0, z: 1 };
 
-    //   expectObservable(counterState).toBe(stateSequence, counter1Values);
+      expectObservable(counterState).toBe(stateSequence, counter1Values);
 
-    // });
+    });
 
 
     it('should increment and decrement counter2 separately', function() {
@@ -166,7 +168,7 @@ describe('ngRx Store', () => {
 
     });
 
-    xit('should allow you to add a reducer later', function() {
+    it('should allow you to add a reducer later', function() {
 
       let currentState;
 
@@ -178,43 +180,13 @@ describe('ngRx Store', () => {
       store.dispatch({type: INCREMENT});
       expect(currentState).toEqual({counter1: 1, counter2: 2, counter3: 1});
 
-      store.replaceReducer(combineReducers({'dynamicCounter' : counterReducer}));
+      store.replaceReducers({'dynamicCounter' : counterReducer});
 
-      expect(currentState).toEqual({counter1: 1, counter2: 2, counter3: 1, dynamicCounter: 1});
-
-      store.dispatch({type: INCREMENT});
-
-      expect(currentState).toEqual({counter1: 2, counter2: 3, counter3: 2, dynamicCounter: 2});
-
-    });
-
-    xit('should allow you to update a reducer later', function() {
-
-      let currentState;
-
-      store.subscribe(state => {
-        currentState = state;
-      });
-
-      expect(currentState).toEqual({counter1: 0, counter2: 1, counter3: 0});
-      store.dispatch({type: INCREMENT});
-      expect(currentState).toEqual({counter1: 1, counter2: 2, counter3: 1});
-
-      let replacedReducers:{[key:string] : any} = {};
-      replacedReducers['counter3'] = counterReducer;
-      replacedReducers['counter2'] = counterReducer;
-
-      let replacedState = {};
-      replacedState['counter3'] = 1;
-      // the state of 'counter2' is omitted to test that the initial state is optional
-
-      store.replaceReducer(combineReducers(replacedReducers));
-
-      expect(currentState).toEqual({counter1: 1, counter2: 0, counter3:1});
+      expect(currentState).toEqual({counter1: 1, counter2: 2, counter3: 1, dynamicCounter: 0});
 
       store.dispatch({type: INCREMENT});
 
-      expect(currentState).toEqual({counter1: 2, counter2: 1, counter3: 2});
+      expect(currentState).toEqual({counter1: 2, counter2: 3, counter3: 2, dynamicCounter: 1});
 
     });
   });

@@ -1,3 +1,4 @@
+import {Observable} from 'rxjs/Observable';
 import {Store} from './store';
 
 export interface Action {
@@ -9,10 +10,6 @@ export interface Reducer<T> {
   (state: T, action: Action): T;
 }
 
-export interface StoreCreator {
-  (reducer: Reducer<any>, initialState: {[key:string]: any}): Store<any>
-}
-
-export interface StoreEnhancer {
-  (next: StoreCreator): StoreCreator;
+export interface Middleware {
+  (observable: Observable<any>): Observable<any>;
 }

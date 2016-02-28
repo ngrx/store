@@ -1,7 +1,7 @@
 declare var describe, it, expect, hot, cold, expectObservable, expectSubscriptions, console;
 require('es6-shim');
 import 'reflect-metadata';
-import {Store, Action, combineReducers} from '../src/index';
+import {Store, Action, combineReducers, REDUCER} from '../src/index';
 import {provideStore} from '../src/ng2';
 import {Observable} from 'rxjs/Observable';
 import {Injector, provide} from 'angular2/core';
@@ -44,6 +44,20 @@ describe('ngRx Integration spec', () => {
 
     it('should successfully instantiate', () => {
       expect(store).toBeDefined();
+    });
+
+    it('should combine reducers automatically if a key/value map is provided', () => {
+      const reducers = { test: function(){} };
+      spyOn(reducers, 'test');
+      const action = { type: 'Test Action' };
+      const reducer = Injector.resolveAndCreate([ provideStore(reducers) ]).get(REDUCER);
+
+      expect(reducer).toBeDefined();
+      expect(typeof reducer === 'function').toBe(true);
+
+      reducer(undefined, action);
+
+      expect(reducers.test).toHaveBeenCalledWith(undefined, action);
     });
 
     it('should start with no todos and showing all filter', () => {

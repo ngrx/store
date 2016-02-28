@@ -23,7 +23,7 @@ describe('ngRx Store Backend', () => {
     spyOn(Middleware, 'post').and.callThrough();
 
     injector = Injector.resolveAndCreate([
-      provideStore<any>(Reducer.reduce, initialState),
+      provideStore(Reducer.reduce, initialState),
       usePreMiddleware(Middleware.pre),
       usePostMiddleware(Middleware.post)
     ]);

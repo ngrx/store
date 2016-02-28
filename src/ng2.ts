@@ -4,7 +4,7 @@ import {Reducer, Middleware} from './interfaces';
 import {Dispatcher} from './dispatcher';
 import {Store} from './store';
 import {StoreBackend} from './store-backend';
-import {compose} from './utils';
+import {compose, combineReducers} from './utils';
 
 export const PRE_MIDDLEWARE = new OpaqueToken('ngrx/store/pre-middleware');
 export const POST_MIDDLEWARE = new OpaqueToken('ngrx/store/post-middleware')
@@ -53,7 +53,8 @@ const resolvedPostMiddlewareProvider = provide(RESOLVED_POST_MIDDLEWARE, {
   }
 });
 
-export function provideStore<T>(reducer: Reducer<T>, initialState?: T) {
+export function provideStore(_reducer: any, initialState?: any) {
+  const reducer = typeof _reducer === 'function' ? _reducer : combineReducers(_reducer);
   return [
     provide(REDUCER, { useValue: reducer }),
     provide(INITIAL_STATE, { useValue: initialState }),

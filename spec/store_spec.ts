@@ -1,7 +1,8 @@
-declare var describe, it, expect, hot, cold, expectObservable, expectSubscriptions, console;
+declare var describe, it, expect, hot, cold, expectObservable, expectSubscriptions, console, beforeEach;
 require('es6-shim');
 import 'reflect-metadata';
-import {provideStore, Store, Dispatcher, Action} from '../src/store';
+import {Store, Dispatcher, StoreBackend, Action, combineReducers} from '../src/index';
+import {provideStore} from '../src/ng2';
 import {Observable} from 'rxjs/Observable';
 import {Injector, provide} from 'angular2/core';
 
@@ -31,9 +32,16 @@ describe('ngRx Store', () => {
     let dispatcher: Dispatcher<Action>;
 
     beforeEach(() => {
+      const rootReducer = combineReducers({
+        counter1: counterReducer,
+        counter2: counterReducer,
+        counter3: counterReducer
+      });
+
+      const initialValue = { counter1: 0, counter2: 1 };
 
       injector = Injector.resolveAndCreate([
-        provideStore({ counter1: counterReducer, counter2: counterReducer, counter3: counterReducer }, { counter1: 0, counter2: 1 })
+        provideStore(rootReducer, initialValue)
       ]);
 
       store = injector.get(Store);
@@ -123,39 +131,6 @@ describe('ngRx Store', () => {
 
     });
 
-    it('should increment and decrement counter1 using a created action', function() {
-
-      const counterSteps = hot(actionSequence, actionValues);
-
-      const incrementAction = store.createAction(INCREMENT);
-      const decrementAction = store.createAction(DECREMENT);
-      const resetAction = store.createAction(RESET);
-
-      counterSteps.subscribe((action) => {
-        switch (action.type) {
-          case INCREMENT:
-            incrementAction();
-            break;
-          case DECREMENT:
-            decrementAction();
-            break;
-          case RESET:
-            resetAction();
-            break;
-
-        }
-      });
-
-
-
-      const counterState = store.select('counter1');
-
-      const stateSequence = 'i-v--w--x--y--z';
-      const counter1Values = { i: 0, v: 1, w: 2, x: 1, y: 0, z: 1 };
-
-      expectObservable(counterState).toBe(stateSequence, counter1Values);
-
-    });
 
     it('should increment and decrement counter2 separately', function() {
 
@@ -212,43 +187,26 @@ describe('ngRx Store', () => {
       store.dispatch({type: INCREMENT});
       expect(currentState).toEqual({counter1: 1, counter2: 2, counter3: 1});
 
-      store.replaceReducer({'dynamicCounter' : counterReducer}, {'dynamicCounter' : 1});
+      store.replaceReducer(combineReducers({ counter1: counterReducer, dynamicCounter: counterReducer}));
 
-      expect(currentState).toEqual({counter1: 1, counter2: 2, counter3: 1, dynamicCounter: 1});
+      expect(currentState).toEqual({ counter1: 1, dynamicCounter: 0 });
 
       store.dispatch({type: INCREMENT});
 
-      expect(currentState).toEqual({counter1: 2, counter2: 3, counter3: 2, dynamicCounter: 2});
+      expect(currentState).toEqual({ counter1: 2, dynamicCounter: 1 });
 
     });
 
-    it('should allow you to update a reducer later', function() {
+    it('should implement the observer interface forwarding actions and errors to the dispatcher', function() {
 
-      let currentState;
+      spyOn(dispatcher, 'next');
+      spyOn(dispatcher, 'error');
 
-      store.subscribe(state => {
-        currentState = state;
-      });
+      store.next(1);
+      store.error(2);
 
-      expect(currentState).toEqual({counter1: 0, counter2: 1, counter3: 0});
-      store.dispatch({type: INCREMENT});
-      expect(currentState).toEqual({counter1: 1, counter2: 2, counter3: 1});
-
-      let replacedReducers:{[key:string] : any} = {};
-      replacedReducers['counter3'] = counterReducer;
-      replacedReducers['counter2'] = counterReducer;
-
-      let replacedState = {};
-      replacedState['counter3'] = 1;
-      // the state of 'counter2' is omitted to test that the initial state is optional
-
-      store.replaceReducer(replacedReducers, replacedState);
-
-      expect(currentState).toEqual({counter1: 1, counter2: 0, counter3:1});
-
-      store.dispatch({type: INCREMENT});
-
-      expect(currentState).toEqual({counter1: 2, counter2: 1, counter3: 2});
+      expect(dispatcher.next).toHaveBeenCalledWith(1);
+      expect(dispatcher.error).toHaveBeenCalledWith(2);
 
     });
   });

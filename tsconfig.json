@@ -10,7 +10,11 @@
 	},
 	"files": [
     "typings/main.d.ts",
-		"src/store.ts"
+    "src/index.ts",
+		"src/store.ts",
+		"src/store-backend.ts",
+		"src/dispatcher.ts",
+		"src/ng2.ts"
 	],
 	"exclude": [
 		"node_modules"

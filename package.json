@@ -2,7 +2,7 @@
   "name": "@ngrx/store",
   "version": "1.2.1",
   "description": "RxJS powered Redux for Angular2 apps",
-  "main": "./dist/store.js",
+  "main": "./dist/index.js",
   "scripts": {
     "test": "npm run build_test && jasmine",
     "clean_ng2": "rimraf node_modules/angular2/manual_typings node_modules/angular2/typings",
@@ -10,7 +10,7 @@
     "build_test": "npm run clean_test && tsc -p spec",
     "build_dist": "rm -rf dist && tsc",
     "prepublish": "npm run typings && npm run build_dist",
-    "lint": "tslint src/store.ts",
+    "lint": "tslint src/**.ts",
     "typings": "typings install && npm run clean_ng2"
   },
   "repository": {
@@ -29,7 +29,7 @@
   },
   "homepage": "https://github.com/ngrx/store#readme",
   "devDependencies": {
-    "angular2": "2.0.0-beta.0",
+    "angular2": "2.0.0-beta.7",
     "es6-promise": "^3.0.2",
     "es6-shim": "^0.33.13",
     "jasmine": "^2.4.1",
@@ -37,12 +37,14 @@
     "lodash": "^3.10.1",
     "reflect-metadata": "0.1.2",
     "rimraf": "^2.5.1",
+    "tslint": "^3.4.0",
     "typescript": "^1.7.3",
     "typings": "^0.6.6",
-    "zone.js": "0.5.10"
+    "zone.js": "0.5.15"
   },
-  "dependencies": {
-    "rxjs": "5.0.0-beta.0"
+  "peerDependencies": {
+    "rxjs": "^5.0.0-beta.2",
+    "angular2": "2.0.0-beta.7"
   },
-  "typings": "./dist/store.d.ts"
+  "typings": "./dist/index.d.ts"
 }

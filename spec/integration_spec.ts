@@ -1,7 +1,7 @@
 declare var describe, it, expect, hot, cold, expectObservable, expectSubscriptions, console;
 require('es6-shim');
 import 'reflect-metadata';
-import {Store, Action, combineReducers, REDUCER} from '../src/index';
+import {Store, Action, combineReducers, REDUCER, INITIAL_STATE} from '../src/index';
 import {provideStore} from '../src/ng2';
 import {Observable} from 'rxjs/Observable';
 import {Injector, provide} from 'angular2/core';
@@ -58,6 +58,20 @@ describe('ngRx Integration spec', () => {
       reducer(undefined, action);
 
       expect(reducers.test).toHaveBeenCalledWith(undefined, action);
+    });
+
+    it('should probe the reducer to resolve the initial state if no initial state is provided', () => {
+      const reducer = () => 2;
+      const initialState = Injector.resolveAndCreate([ provideStore(reducer) ]).get(INITIAL_STATE);
+
+      expect(initialState).toBe(2);
+    });
+
+    it('should use a provided initial state', () => {
+      const reducer = () => 2;
+      const initialState = Injector.resolveAndCreate([ provideStore(reducer, 3) ]).get(INITIAL_STATE);
+
+      expect(initialState).toBe(3);
     });
 
     it('should start with no todos and showing all filter', () => {

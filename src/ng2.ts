@@ -3,7 +3,7 @@ import {provide, OpaqueToken, Provider} from 'angular2/core';
 import {Reducer, Middleware} from './interfaces';
 import {Dispatcher} from './dispatcher';
 import {Store} from './store';
-import {StoreBackend} from './store-backend';
+import {StoreBackend, ActionTypes} from './store-backend';
 import {compose, combineReducers} from './utils';
 
 export const PRE_MIDDLEWARE = new OpaqueToken('ngrx/store/pre-middleware');
@@ -53,11 +53,27 @@ const resolvedPostMiddlewareProvider = provide(RESOLVED_POST_MIDDLEWARE, {
   }
 });
 
-export function provideStore(_reducer: any, initialState?: any) {
-  const reducer = typeof _reducer === 'function' ? _reducer : combineReducers(_reducer);
+export function provideStore(reducer: any, initialState?: any) {
   return [
-    provide(REDUCER, { useValue: reducer }),
-    provide(INITIAL_STATE, { useValue: initialState }),
+    provide(REDUCER, {
+      useFactory(){
+        if(typeof reducer === 'function'){
+          return reducer;
+        }
+
+        return combineReducers(reducer);
+      }
+    }),
+    provide(INITIAL_STATE, {
+      deps: [ REDUCER ],
+      useFactory(reducer){
+        if(initialState === undefined){
+          return reducer(undefined, { type: ActionTypes.INIT });
+        }
+
+        return initialState;
+      }
+    }),
     provide(PRE_MIDDLEWARE, { multi: true, useValue: (T => T) }),
     provide(POST_MIDDLEWARE, { multi: true, useValue: (T => T) }),
     dispatcherProvider,

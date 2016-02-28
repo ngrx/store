@@ -1,6 +1,11 @@
+import {provide} from 'angular2/core';
+
+import {Store, Dispatcher, provideStoreFn} from './store';
+
+export const provideStore = provideStoreFn(provide);
+
+export {Store, Dispatcher}
+
 export * from './interfaces';
-export * from './store';
+
 export * from './utils';
-export * from './dispatcher';
-export * from './store-backend';
-export * from './ng2';

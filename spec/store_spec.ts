@@ -1,8 +1,7 @@
 declare var describe, it, expect, hot, cold, expectObservable, expectSubscriptions, console, beforeEach;
 require('es6-shim');
 import 'reflect-metadata';
-import {Store, Dispatcher, StoreBackend, Action, combineReducers} from '../src/index';
-import {provideStore} from '../src/ng2';
+import {Store, Dispatcher, Action, provideStore} from '../src/index';
 import {Observable} from 'rxjs/Observable';
 import {Injector, provide} from 'angular2/core';
 
@@ -29,23 +28,17 @@ describe('ngRx Store', () => {
 
     let injector: Injector;
     let store: Store<TestAppSchema>;
-    let dispatcher: Dispatcher<Action>;
+    let dispatcher:Dispatcher;
 
     beforeEach(() => {
-      const rootReducer = combineReducers({
-        counter1: counterReducer,
-        counter2: counterReducer,
-        counter3: counterReducer
-      });
-
-      const initialValue = { counter1: 0, counter2: 1 };
 
       injector = Injector.resolveAndCreate([
-        provideStore(rootReducer, initialValue)
+        provideStore({ counter1: counterReducer, counter2: counterReducer, counter3: counterReducer }, { counter1: 0, counter2: 1 })
       ]);
 
       store = injector.get(Store);
       dispatcher = injector.get(Dispatcher);
+
     });
 
     it('should provide an Observable Store', () => {
@@ -187,26 +180,13 @@ describe('ngRx Store', () => {
       store.dispatch({type: INCREMENT});
       expect(currentState).toEqual({counter1: 1, counter2: 2, counter3: 1});
 
-      store.replaceReducer(combineReducers({ counter1: counterReducer, dynamicCounter: counterReducer}));
+      store.replaceReducers({'dynamicCounter' : counterReducer});
 
-      expect(currentState).toEqual({ counter1: 1, dynamicCounter: 0 });
+      expect(currentState).toEqual({counter1: 1, counter2: 2, counter3: 1, dynamicCounter: 0});
 
       store.dispatch({type: INCREMENT});
 
-      expect(currentState).toEqual({ counter1: 2, dynamicCounter: 1 });
-
-    });
-
-    it('should implement the observer interface forwarding actions and errors to the dispatcher', function() {
-
-      spyOn(dispatcher, 'next');
-      spyOn(dispatcher, 'error');
-
-      store.next(1);
-      store.error(2);
-
-      expect(dispatcher.next).toHaveBeenCalledWith(1);
-      expect(dispatcher.error).toHaveBeenCalledWith(2);
+      expect(currentState).toEqual({counter1: 2, counter2: 3, counter3: 2, dynamicCounter: 1});
 
     });
   });

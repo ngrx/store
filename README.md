@@ -90,6 +90,43 @@ class MyApp {
 
 ```
 
+###Middleware
+####`(observable: Observable<any>): Observable<any>`
+Store middleware provides pre and post reducer entry points for all dispatched actions. Middleware can be used for everything from logging, asynchronous event handling, to action or post action manipulation. 
+
+#####Dispatched action pipeline:
+1. Pre-Middleware : `(observable: Observable<Action>): Observable<Action>`
+2. Reducer
+3. Post-Middleware : `(observable: Observable<State>): Observable<State>`
+
+Middleware can be configured during application bootstrap by utilizing the `usePreMiddleware(...middleware: Middleware[])` and `usePostMiddleware(...middleware: Middleware[])` helper functions. 
+
+```typescript
+import {bootstrap} from 'angular2/platform/browser';
+import {App} from './myapp';
+import {provideStore, usePreMiddleware, usePostMiddleware, Middleware} from "@ngrx/store";
+import {counter} from "./counter";
+
+const actionLog : Middleware = action => {
+    return action.do(val => {
+        console.warn('DISPATCHED ACTION: ', val)
+    });
+};
+
+const stateLog : Middleware = state => {
+    return state.do(val => {
+        console.info('NEW STATE: ', val)
+    });
+};
+
+bootstrap(App, [
+  provideStore({counter},{counter : 0}),
+  usePreMiddleware(actionLog),
+  usePostMiddleware(stateLog)
+]);
+```
+For a more complex example check out [store-saga](https://github.com/MikeRyan52/store-saga), an ngrx store middleware implementation inspired by [redux saga](https://github.com/yelouafi/redux-saga).
+
 ## Contributing
 
 Please read [contributing guidelines here](https://github.com/ngrx/store/blob/master/CONTRIBUTING.md).

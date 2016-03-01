@@ -12,6 +12,7 @@
 		"helpers/test-helper.ts",
     "integration_spec.ts",
 		"store_spec.ts",
-		"backend_spec.ts"
+		"backend_spec.ts",
+		"ng2_spec.ts"
 	]
 }

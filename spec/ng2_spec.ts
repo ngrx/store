@@ -5,7 +5,14 @@ import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 import {Injector, provide, OpaqueToken} from 'angular2/core';
 
-import {StoreBackend, usePreMiddleware, usePostMiddleware, RESOLVED_PRE_MIDDLEWARE, provideStore} from '../src';
+import {
+  StoreBackend,
+  usePreMiddleware,
+  usePostMiddleware,
+  RESOLVED_PRE_MIDDLEWARE,
+  provideStore,
+  createMiddleware
+} from '../src';
 
 
 describe('ngRx Angular 2 Bindings', () => {
@@ -21,9 +28,10 @@ describe('ngRx Angular 2 Bindings', () => {
       spyOn(third, 'apply');
 
       const secondProvider = provide(new OpaqueToken('Second Midleware'), { useValue: second.apply });
+      const thirdProvider = createMiddleware(() => third.apply);
       const injector = Injector.resolveAndCreate([
         provideStore((_, a) => a),
-        usePreMiddleware(first.apply, secondProvider, third.apply)
+        usePreMiddleware(first.apply, secondProvider, thirdProvider)
       ]);
 
       const preMiddleware = injector.get(RESOLVED_PRE_MIDDLEWARE);

@@ -92,7 +92,16 @@ export function usePostMiddleware(...middleware: Array<Middleware | Provider>) {
   return provideMiddlewareForToken(POST_MIDDLEWARE, middleware);
 }
 
-function provideMiddlewareForToken(token, _middleware: any[]): Provider[]{
+export function createMiddleware(
+  useFactory: (...deps: any[]) => Middleware, deps?: any[]
+): Provider {
+  return provide(new OpaqueToken('@ngrx/store middleware'), {
+    deps,
+    useFactory
+  });
+}
+
+export function provideMiddlewareForToken(token, _middleware: any[]): Provider[] {
   function isProvider(t: any): t is Provider{
     return t instanceof Provider;
   }

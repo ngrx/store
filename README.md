@@ -49,7 +49,7 @@ export const counter:Reducer<number> = (state:number = 0, action:Action) => {
 ```typescript
 
 import {bootstrap} from 'angular2/platform/bootstrap';
-import {provideStore} from '@ngrx/store';
+import {provideStore} from '@ngrx/ng2';
 import {App} from './myapp';
 
 import {counter} from './counter';
@@ -104,7 +104,8 @@ Middleware can be configured during application bootstrap by utilizing the `useP
 ```typescript
 import {bootstrap} from 'angular2/platform/browser';
 import {App} from './myapp';
-import {provideStore, usePreMiddleware, usePostMiddleware, Middleware} from "@ngrx/store";
+import {Middleware} from "@ngrx/interfaces";
+import {provideStore, usePreMiddleware, usePostMiddleware} from '@ngrx/ng2';
 import {counter} from "./counter";
 
 const actionLog : Middleware = action => {
@@ -130,8 +131,3 @@ For a more complex example check out [store-saga](https://github.com/MikeRyan52/
 ## Contributing
 
 Please read [contributing guidelines here](https://github.com/ngrx/store/blob/master/CONTRIBUTING.md).
-
-
-
-
-

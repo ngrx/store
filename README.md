@@ -101,6 +101,9 @@ Store middleware provides pre and post reducer entry points for all dispatched a
 
 Middleware can be configured during application bootstrap by utilizing the `usePreMiddleware(...middleware: Middleware[])` and `usePostMiddleware(...middleware: Middleware[])` helper functions. 
 
+####usage
+*Warning: Remember to import all utilized RxJS operators.*
+
 ```typescript
 import {bootstrap} from 'angular2/platform/browser';
 import {App} from './myapp';
@@ -125,13 +128,36 @@ bootstrap(App, [
   usePostMiddleware(stateLog)
 ]);
 ```
-For a more complex example check out [store-saga](https://github.com/MikeRyan52/store-saga), an ngrx store middleware implementation inspired by [redux saga](https://github.com/yelouafi/redux-saga).
 
+####Middleware with Dependencies
+For middleware requiring dependencies the `createMiddleware(useFactory: (...deps: any[]) => Middleware, deps?: any[]): Provider` helper function is supplied. This allows you to quickly create middleware that relies on other Angular services, such as the `Dispatcher`.
+####usage
+- Create middleware provider:
+```typescript
+export const thunk = createMiddleware(function(dispatcher: Dispatcher<Action>) {
+  return function(all$: Observable<Action | Thunk>){
+    const [thunks$, actions$] = all$.partition(t => typeof t === 'function');
+
+    thunks$.forEach(thunk => thunk(action => dispatcher.dispatch(action));
+
+    return actions$;
+  }
+}, [Dispatcher]);
+```
+- Initialize with `usePreMiddleware(...middleware: Middleware[])` or `usePostMiddleware(...middleware: Middleware[])` on application bootstrap:
+```typescript
+import {bootstrap} from 'angular2/platform/browser';
+import {App} from './myapp';
+import {provideStore, usePreMiddleware, Middleware} from '@ngrx/store';
+import {thunk} from './thunk';
+import {exampleReducer} from './exampleReducer';
+
+bootstrap(App, [
+  provideStore({exampleReducer}),
+  usePreMiddleware(thunk)
+]);
+```
 ## Contributing
 
 Please read [contributing guidelines here](https://github.com/ngrx/store/blob/master/CONTRIBUTING.md).
-
-
-
-
 

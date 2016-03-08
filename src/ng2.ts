@@ -1,4 +1,4 @@
-import {provide, OpaqueToken, Provider} from 'angular2/core';
+import {provide, OpaqueToken, Provider, Injector} from 'angular2/core';
 
 import {Reducer, Middleware} from './interfaces';
 import {Dispatcher} from './dispatcher';
@@ -84,17 +84,43 @@ export function provideStore(reducer: any, initialState?: any) {
   ];
 }
 
-export function usePreMiddleware(...middleware: Middleware[]) {
+export function usePreMiddleware(...middleware: Array<Middleware | Provider>) {
   return provideMiddlewareForToken(PRE_MIDDLEWARE, middleware);
 }
 
-export function usePostMiddleware(...middleware: Middleware[]) {
+export function usePostMiddleware(...middleware: Array<Middleware | Provider>) {
   return provideMiddlewareForToken(POST_MIDDLEWARE, middleware);
 }
 
-function provideMiddlewareForToken(token, middleware: any[]){
-  return middleware.map(m => provide(token, {
+export function createMiddleware(
+  useFactory: (...deps: any[]) => Middleware, deps?: any[]
+): Provider {
+  return provide(new OpaqueToken('@ngrx/store middleware'), {
+    deps,
+    useFactory
+  });
+}
+
+export function provideMiddlewareForToken(token, _middleware: any[]): Provider[] {
+  function isProvider(t: any): t is Provider{
+    return t instanceof Provider;
+  }
+
+  const provider = provide(token, {
     multi: true,
-    useValue: m
-  }));
+    deps: [ Injector ],
+    useFactory(injector: Injector){
+      const middleware = _middleware.map(m => {
+        if(isProvider(m)){
+          return injector.get(m.token);
+        }
+
+        return m;
+      });
+
+      return compose(...middleware);
+    }
+  });
+
+  return [ ..._middleware.filter(isProvider), provider ];
 }

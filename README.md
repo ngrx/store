@@ -101,6 +101,9 @@ Store middleware provides pre and post reducer entry points for all dispatched a
 
 Middleware can be configured during application bootstrap by utilizing the `usePreMiddleware(...middleware: Middleware[])` and `usePostMiddleware(...middleware: Middleware[])` helper functions. 
 
+####usage
+*Warning: Remember to import all utilized RxJS operators.*
+
 ```typescript
 import {bootstrap} from 'angular2/platform/browser';
 import {App} from './myapp';
@@ -127,11 +130,27 @@ bootstrap(App, [
 ```
 For a more complex example check out [store-saga](https://github.com/MikeRyan52/store-saga), an ngrx store middleware implementation inspired by [redux saga](https://github.com/yelouafi/redux-saga).
 
+####Middleware with Dependencies
+For middleware requiring dependencies the `createMiddleware(useFactory: (...deps: any[]) => Middleware, deps?: any[]): Provider` helper function is supplied. This allows you to quickly create middleware that relies on other Angular services, such as the `Dispatcher`.
+####usage
+```typescript
+const thunk = createMiddleware(function(dispatcher: Dispatcher<Action>): Middleware{
+  return function(all$: Observable<Action | Thunk>){
+    const [thunks$, actions$] = all$.partition(t => typeof t === 'function');
+
+    thunks$
+      .map(thunk => return new Observable(observer => {
+        thunk(action => observer.next(action));
+      }))
+      .mergeAll()
+      .subscribe(dispatcher);
+
+    return actions$;
+  }
+}, [ Dispatcher ]);
+```
+
 ## Contributing
 
 Please read [contributing guidelines here](https://github.com/ngrx/store/blob/master/CONTRIBUTING.md).
-
-
-
-
 

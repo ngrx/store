@@ -64,6 +64,10 @@ bootstrap(App, [ provideStore({counter}, {counter: 0}) ]);
 import {Store} from '@ngrx/store';
 import {INCREMENT, DECREMENT, RESET} from './counter';
 
+interface AppState {
+  counter: number;
+}
+
 @Component({
 	selector: 'my-app',
 	template: `
@@ -74,7 +78,7 @@ import {INCREMENT, DECREMENT, RESET} from './counter';
 })
 class MyApp {
 	counter: Observable<number>;
-	constructor(public store: Store<number>){
+	constructor(public store: Store<AppState>){
 		this.counter = store.select('counter');
 	}
 	increment(){

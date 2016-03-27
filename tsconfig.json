@@ -14,7 +14,9 @@
 		"src/store.ts",
 		"src/store-backend.ts",
 		"src/dispatcher.ts",
-		"src/ng2.ts"
+		"src/ng2.ts",
+		"src/interfaces.ts",
+		"src/utils.ts"
 	],
 	"exclude": [
 		"node_modules"

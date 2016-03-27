@@ -37,6 +37,7 @@
     "lodash": "^3.10.1",
     "reflect-metadata": "0.1.2",
     "rimraf": "^2.5.1",
+    "rxjs": "^5.0.0-beta.2",
     "tslint": "^3.4.0",
     "typescript": "^1.7.3",
     "typings": "^0.6.6",

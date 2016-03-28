@@ -40,6 +40,10 @@ export class Store<T> extends BehaviorSubject<T> {
   getState() {
     return this.value;
   }
+  
+  toJSON() {
+    return this.getState();
+  }
 
   dispatch(action: Action) {
     this._dispatcher.dispatch(action);

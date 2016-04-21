@@ -1,7 +1,7 @@
 declare var describe, it, expect, hot, cold, expectObservable, expectSubscriptions, console, beforeEach;
 require('es6-shim');
 import 'reflect-metadata';
-import {Store, Dispatcher, StoreBackend, Action, combineReducers} from '../src/index';
+import {Store, Dispatcher, Action, combineReducers} from '../src/index';
 import {provideStore} from '../src/ng2';
 import {Observable} from 'rxjs/Observable';
 import {Injector, provide} from 'angular2/core';
@@ -29,7 +29,7 @@ describe('ngRx Store', () => {
 
     let injector: Injector;
     let store: Store<TestAppSchema>;
-    let dispatcher: Dispatcher<Action>;
+    let dispatcher: Dispatcher;
 
     beforeEach(() => {
       const rootReducer = combineReducers({

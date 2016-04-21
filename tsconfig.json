@@ -9,14 +9,13 @@
 		"declaration": true
 	},
 	"files": [
-    "typings/main.d.ts",
-    "src/index.ts",
-		"src/store.ts",
-		"src/store-backend.ts",
-		"src/dispatcher.ts",
-		"src/ng2.ts"
-	],
-	"exclude": [
-		"node_modules"
+			"src/dispatcher.ts",
+			"src/index.ts",
+			"src/reducer.ts",
+			"src/select.ts",
+			"src/state.ts",
+			"src/store.ts",
+			"src/utils.ts",
+			"typings/main.d.ts"
 	]
 }

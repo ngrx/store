@@ -1,59 +1,35 @@
 import {Observable} from 'rxjs/Observable';
 import {BehaviorSubject} from 'rxjs/subject/BehaviorSubject';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/distinctUntilChanged';
+import {Observer} from 'rxjs/Observer';
 
-import {Action, Reducer} from './interfaces';
-import {StoreBackend} from './store-backend';
-import {Dispatcher} from './dispatcher';
+import {State} from './state';
+import {Dispatcher, Action} from './dispatcher';
+import {Reducer, ActionReducer} from './reducer';
 
-export class Store<T> extends BehaviorSubject<T> {
+export class Store<T> extends BehaviorSubject<T> implements Observer<Action> {
   constructor(
-    private _dispatcher: Dispatcher<Action>,
-    private _backend: StoreBackend,
-    initialState?: T
+    private _dispatcher$: Dispatcher,
+    private _reducer$: Reducer,
+    state$: State<T>
   ) {
-    super(initialState);
+    super(state$.value);
 
-    _backend.connect(state => super.next(state));
-  }
-
-  select<R>(keyOrSelector: ((state: T) => R) | string | number | symbol): Observable<R> {
-    if (
-      typeof keyOrSelector === 'string' ||
-      typeof keyOrSelector === 'number' ||
-      typeof keyOrSelector === 'symbol'
-    ) {
-      return this.map(state => state[keyOrSelector]).distinctUntilChanged();
-    }
-    else if (typeof keyOrSelector === 'function') {
-      return this.map(keyOrSelector).distinctUntilChanged();
-    }
-    else {
-      throw new TypeError(
-        `Store@select Unknown Parameter Type: `
-        + `Expected type of function or valid key type, got ${typeof keyOrSelector}`
-      );
-    }
-  }
-
-  getState() {
-    return this.value;
+    state$.subscribe(state => super.next(state));
   }
 
   dispatch(action: Action) {
-    this._dispatcher.dispatch(action);
+    this._dispatcher$.dispatch(action);
   }
 
   next(action: any) {
-    this._dispatcher.next(action);
+    this._dispatcher$.next(action);
   }
 
   error(error?: any) {
-    this._dispatcher.error(error);
+    this._dispatcher$.error(error);
   }
 
-  replaceReducer<V>(reducer: Reducer<V>) {
-    this._backend.replaceReducer(reducer);
+  replaceReducer<V>(reducer: ActionReducer<V>) {
+    this._reducer$.replace(reducer);
   }
 }

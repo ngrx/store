@@ -1,6 +1,6 @@
-import {Reducer} from './interfaces';
+import {ActionReducer} from './reducer';
 
-export function combineReducers(reducers: any): Reducer<any> {
+export function combineReducers(reducers: any): ActionReducer<any> {
   const reducerKeys = Object.keys(reducers);
   const finalReducers = {};
 

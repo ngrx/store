@@ -39,7 +39,7 @@
     "rimraf": "^2.5.1",
     "tslint": "^3.4.0",
     "typescript": "^1.7.3",
-    "typings": "^0.6.6",
+    "typings": "^0.8.1",
     "zone.js": "0.5.15"
   },
   "peerDependencies": {

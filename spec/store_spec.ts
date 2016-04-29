@@ -4,7 +4,7 @@ import 'reflect-metadata';
 import {Store, Dispatcher, StoreBackend, Action, combineReducers} from '../src/index';
 import {provideStore} from '../src/ng2';
 import {Observable} from 'rxjs/Observable';
-import {Injector, provide} from 'angular2/core';
+import {ReflectiveInjector, provide} from 'angular2/core';
 
 import {counterReducer, INCREMENT, DECREMENT, RESET} from './fixtures/counter';
 
@@ -27,7 +27,7 @@ describe('ngRx Store', () => {
 
   describe('basic store actions', function() {
 
-    let injector: Injector;
+    let injector: ReflectiveInjector;
     let store: Store<TestAppSchema>;
     let dispatcher: Dispatcher<Action>;
 
@@ -40,7 +40,7 @@ describe('ngRx Store', () => {
 
       const initialValue = { counter1: 0, counter2: 1 };
 
-      injector = Injector.resolveAndCreate([
+      injector = ReflectiveInjector.resolveAndCreate([
         provideStore(rootReducer, initialValue)
       ]);
 

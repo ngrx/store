@@ -3,7 +3,7 @@ require('es6-shim');
 import 'reflect-metadata';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
-import {Injector, provide, OpaqueToken} from 'angular2/core';
+import {ReflectiveInjector, provide, OpaqueToken} from 'angular2/core';
 
 import {
   StoreBackend,
@@ -29,7 +29,7 @@ describe('ngRx Angular 2 Bindings', () => {
 
       const secondProvider = provide(new OpaqueToken('Second Midleware'), { useValue: second.apply });
       const thirdProvider = createMiddleware(() => third.apply);
-      const injector = Injector.resolveAndCreate([
+      const injector = ReflectiveInjector.resolveAndCreate([
         provideStore((_, a) => a),
         usePreMiddleware(first.apply, secondProvider, thirdProvider)
       ]);

@@ -29,3 +29,6 @@ tmp
 typings
 dist
 *.tgz
+
+# IDE
+.idea

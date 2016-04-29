@@ -3,7 +3,7 @@ require('es6-shim');
 import 'reflect-metadata';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
-import {Injector, provide} from 'angular2/core';
+import {ReflectiveInjector, provide} from 'angular2/core';
 
 import {Dispatcher, StoreBackend, Action, usePreMiddleware, usePostMiddleware, provideStore} from '../src/index';
 import {ActionTypes} from '../src/store-backend';
@@ -13,7 +13,7 @@ describe('ngRx Store Backend', () => {
   const Reducer = { reduce: t => t };
   const Middleware = { pre: t => t, post: t => t };
   const initialState = 123;
-  let injector: Injector;
+  let injector: ReflectiveInjector;
   let backend: StoreBackend;
   let dispatcher: Dispatcher<Action>;
 
@@ -22,7 +22,7 @@ describe('ngRx Store Backend', () => {
     spyOn(Middleware, 'pre').and.callThrough();
     spyOn(Middleware, 'post').and.callThrough();
 
-    injector = Injector.resolveAndCreate([
+    injector = ReflectiveInjector.resolveAndCreate([
       provideStore(Reducer.reduce, initialState),
       usePreMiddleware(Middleware.pre),
       usePostMiddleware(Middleware.post)

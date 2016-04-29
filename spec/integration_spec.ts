@@ -4,7 +4,7 @@ import 'reflect-metadata';
 import {Store, Action, combineReducers, REDUCER, INITIAL_STATE} from '../src/index';
 import {provideStore} from '../src/ng2';
 import {Observable} from 'rxjs/Observable';
-import {Injector, provide} from 'angular2/core';
+import {ReflectiveInjector, provide} from 'angular2/core';
 import 'rxjs/add/observable/combineLatest';
 
 import {counterReducer, INCREMENT, DECREMENT, RESET} from './fixtures/counter';
@@ -25,14 +25,14 @@ describe('ngRx Integration spec', () => {
 
   describe('todo integration spec', function() {
 
-    let injector: Injector;
+    let injector: ReflectiveInjector;
     let store: Store<TodoAppSchema>;
     let currentState: TodoAppSchema;
 
     const rootReducer = combineReducers({ todos, visibilityFilter });
     const initialValue = { todos: [], visibilityFilter: VisibilityFilters.SHOW_ALL };
 
-    injector = Injector.resolveAndCreate([
+    injector = ReflectiveInjector.resolveAndCreate([
       provideStore(rootReducer, initialValue)
     ]);
 
@@ -50,7 +50,7 @@ describe('ngRx Integration spec', () => {
       const reducers = { test: function(){} };
       spyOn(reducers, 'test');
       const action = { type: 'Test Action' };
-      const reducer = Injector.resolveAndCreate([ provideStore(reducers) ]).get(REDUCER);
+      const reducer = ReflectiveInjector.resolveAndCreate([ provideStore(reducers) ]).get(REDUCER);
 
       expect(reducer).toBeDefined();
       expect(typeof reducer === 'function').toBe(true);
@@ -62,14 +62,14 @@ describe('ngRx Integration spec', () => {
 
     it('should probe the reducer to resolve the initial state if no initial state is provided', () => {
       const reducer = () => 2;
-      const initialState = Injector.resolveAndCreate([ provideStore(reducer) ]).get(INITIAL_STATE);
+      const initialState = ReflectiveInjector.resolveAndCreate([ provideStore(reducer) ]).get(INITIAL_STATE);
 
       expect(initialState).toBe(2);
     });
 
     it('should use a provided initial state', () => {
       const reducer = () => 2;
-      const initialState = Injector.resolveAndCreate([ provideStore(reducer, 3) ]).get(INITIAL_STATE);
+      const initialState = ReflectiveInjector.resolveAndCreate([ provideStore(reducer, 3) ]).get(INITIAL_STATE);
 
       expect(initialState).toBe(3);
     });

@@ -7,7 +7,7 @@ import {StoreBackend, ActionTypes} from './store-backend';
 import {compose, combineReducers} from './utils';
 
 export const PRE_MIDDLEWARE = new OpaqueToken('ngrx/store/pre-middleware');
-export const POST_MIDDLEWARE = new OpaqueToken('ngrx/store/post-middleware')
+export const POST_MIDDLEWARE = new OpaqueToken('ngrx/store/post-middleware');
 export const RESOLVED_PRE_MIDDLEWARE = new OpaqueToken('ngrx/store/resolved-pre-middleware');
 export const RESOLVED_POST_MIDDLEWARE = new OpaqueToken('ngrx/store/resolved-post-middleware');
 export const REDUCER = new OpaqueToken('ngrx/store/reducer');
@@ -56,8 +56,8 @@ const resolvedPostMiddlewareProvider = provide(RESOLVED_POST_MIDDLEWARE, {
 export function provideStore(reducer: any, initialState?: any) {
   return [
     provide(REDUCER, {
-      useFactory(){
-        if(typeof reducer === 'function'){
+      useFactory() {
+        if (typeof reducer === 'function') {
           return reducer;
         }
 
@@ -66,8 +66,8 @@ export function provideStore(reducer: any, initialState?: any) {
     }),
     provide(INITIAL_STATE, {
       deps: [ REDUCER ],
-      useFactory(reducer){
-        if(initialState === undefined){
+      useFactory(reducer) {
+        if (initialState === undefined) {
           return reducer(undefined, { type: ActionTypes.INIT });
         }
 
@@ -102,16 +102,16 @@ export function createMiddleware(
 }
 
 export function provideMiddlewareForToken(token, _middleware: any[]): Provider[] {
-  function isProvider(t: any): t is Provider{
+  function isProvider(t: any): t is Provider {
     return t instanceof Provider;
   }
 
   const provider = provide(token, {
     multi: true,
     deps: [ Injector ],
-    useFactory(injector: Injector){
+    useFactory(injector: Injector) {
       const middleware = _middleware.map(m => {
-        if(isProvider(m)){
+        if (isProvider(m)) {
           return injector.get(m.token);
         }
 

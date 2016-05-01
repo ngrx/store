@@ -1,5 +1,5 @@
 import {Subject} from 'rxjs/Subject';
-import {queue} from 'rxjs/scheduler/queue'
+import {queue} from 'rxjs/scheduler/queue';
 import 'rxjs/add/operator/let';
 import 'rxjs/add/operator/scan';
 import 'rxjs/add/operator/observeOn';

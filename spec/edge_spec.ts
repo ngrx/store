@@ -4,7 +4,7 @@ import 'reflect-metadata';
 import {Store, Dispatcher, StoreBackend, Action, combineReducers} from '../src/index';
 import {provideStore} from '../src/ng2';
 import {Observable} from 'rxjs/Observable';
-import {Injector, provide} from 'angular2/core';
+import {ReflectiveInjector, provide} from 'angular2/core';
 
 import {todos, todoCount} from './fixtures/edge_todos';
 
@@ -27,13 +27,13 @@ describe('ngRx Store', () => {
 
   describe('basic store actions', function() {
 
-    let injector: Injector;
+    let injector: ReflectiveInjector;
     let store: Store<TestAppSchema>;
     let dispatcher: Dispatcher<Action>;
 
     beforeEach(() => {
 
-      injector = Injector.resolveAndCreate([
+      injector = ReflectiveInjector.resolveAndCreate([
         provideStore({ todos, todoCount })
       ]);
 

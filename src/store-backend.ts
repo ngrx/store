@@ -1,6 +1,8 @@
 import {Subject} from 'rxjs/Subject';
+import {queue} from 'rxjs/scheduler/queue'
 import 'rxjs/add/operator/let';
 import 'rxjs/add/operator/scan';
+import 'rxjs/add/operator/observeOn';
 
 import {Dispatcher} from './dispatcher';
 import {Middleware, Reducer} from './interfaces';
@@ -25,6 +27,7 @@ export class StoreBackend {
   connect(nextCallbackFn: (state: any) => void) {
     this._dispatcher
       .let(this._preMiddleware)
+      .observeOn(queue)
       .scan((state, action) => this._reducer(state, action), this._initialState)
       .let(this._postMiddleware)
       .subscribe(nextCallbackFn);

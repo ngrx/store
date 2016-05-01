@@ -15,8 +15,5 @@
 		"src/store-backend.ts",
 		"src/dispatcher.ts",
 		"src/ng2.ts"
-	],
-	"exclude": [
-		"node_modules"
 	]
 }

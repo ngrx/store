@@ -3,7 +3,7 @@ require('es6-shim');
 import 'reflect-metadata';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
-import {ReflectiveInjector, provide} from 'angular2/core';
+import {ReflectiveInjector, provide} from '@angular/core';
 
 import {Dispatcher, StoreBackend, Action, usePreMiddleware, usePostMiddleware, provideStore} from '../src/index';
 import {ActionTypes} from '../src/store-backend';

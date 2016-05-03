@@ -3,7 +3,7 @@ require('es6-shim');
 import 'reflect-metadata';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
-import {ReflectiveInjector, provide, OpaqueToken} from 'angular2/core';
+import {ReflectiveInjector, provide, OpaqueToken} from '@angular/core';
 
 import {
   StoreBackend,

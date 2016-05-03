@@ -4,7 +4,7 @@ import 'reflect-metadata';
 import {Store, Action, combineReducers, REDUCER, INITIAL_STATE} from '../src/index';
 import {provideStore} from '../src/ng2';
 import {Observable} from 'rxjs/Observable';
-import {ReflectiveInjector, provide} from 'angular2/core';
+import {ReflectiveInjector, provide} from '@angular/core';
 import 'rxjs/add/observable/combineLatest';
 
 import {counterReducer, INCREMENT, DECREMENT, RESET} from './fixtures/counter';

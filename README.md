@@ -12,6 +12,7 @@ http://plnkr.co/edit/Hb4pJP3jGtOp6b7JubzS?p=preview
 
 ### Introduction
 - [Comprehensive Introduction to @ngrx/store](https://gist.github.com/btroncone/a6e4347326749f938510)
+- [Reactive Angular 2 with ngrx (video)](https://youtu.be/mhA7zZ23Odw)
 - [@ngrx/store in 10 minutes (video)](https://egghead.io/lessons/angular-2-ngrx-store-in-10-minutes)
 
 ### installation

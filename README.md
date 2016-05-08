@@ -11,8 +11,8 @@ RxJS powered state management inspired by Redux for Angular2 apps
 http://plnkr.co/edit/Hb4pJP3jGtOp6b7JubzS?p=preview
 
 ### Introduction
-
-[Comprehensive Introduction to @ngrx/store](https://gist.github.com/btroncone/a6e4347326749f938510)
+- [Comprehensive Introduction to @ngrx/store](https://gist.github.com/btroncone/a6e4347326749f938510)
+- [@ngrx/store in 10 minutes (video)](https://egghead.io/lessons/angular-2-ngrx-store-in-10-minutes)
 
 ### installation
 - Make sure you have angular2 installed via npm : `npm install angular2`

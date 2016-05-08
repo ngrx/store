@@ -11,7 +11,10 @@ RxJS powered state management inspired by Redux for Angular2 apps
 http://plnkr.co/edit/Hb4pJP3jGtOp6b7JubzS?p=preview
 
 ### installation
-- Make sure you have angular2 installed via npm : `npm install angular2`
+- Make sure you have angular2 installed via npm :  
+```shell
+npm install --save @angular/core @angular/compiler @angular/common @angular/platform-browser @angular/platform-browser-dynamic rxjs@5.0.0-beta.6 zone.js@0.6.12
+```
 - Install from npm : `npm install @ngrx/store`
 
 ### usage
@@ -19,7 +22,7 @@ http://plnkr.co/edit/Hb4pJP3jGtOp6b7JubzS?p=preview
 - Create a reducer function for each data type you have:
 
 ```typescript
-//counter.ts
+// counter.ts
 import {Reducer, Action} from '@ngrx/store';
 
 export const INCREMENT = 'INCREMENT';
@@ -48,19 +51,20 @@ export const counter:Reducer<number> = (state:number = 0, action:Action) => {
 
 ```typescript
 
-import {bootstrap} from 'angular2/platform/bootstrap';
+import {bootstrap} from '@angular/platform-browser-dynamic';
 import {provideStore} from '@ngrx/store';
-import {App} from './myapp';
+import {MyApp} from './my-app';
 
 import {counter} from './counter';
 
-bootstrap(App, [ provideStore({counter}, {counter: 0}) ]);
+bootstrap(MyApp, [ provideStore({counter}, {counter: 0}) ]);
 
 ```
 
-- You can then inject the `Store` service into your Components and Services:
-
+- You can then inject the `Store` service into your Components and Services:  
 ```typescript
+// my-app.ts
+import {Component} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {INCREMENT, DECREMENT, RESET} from './counter';
 
@@ -109,8 +113,8 @@ Middleware can be configured during application bootstrap by utilizing the `useP
 *Warning: Remember to import all utilized RxJS operators.*
 
 ```typescript
-import {bootstrap} from 'angular2/platform/browser';
-import {App} from './myapp';
+import {bootstrap} from '@angular/platform-browser-dynamic';
+import {MyApp} from './my-app';
 import {provideStore, usePreMiddleware, usePostMiddleware, Middleware} from "@ngrx/store";
 import {counter} from "./counter";
 
@@ -126,7 +130,7 @@ const stateLog : Middleware = state => {
     });
 };
 
-bootstrap(App, [
+bootstrap(MyApp, [
   provideStore({counter},{counter : 0}),
   usePreMiddleware(actionLog),
   usePostMiddleware(stateLog)
@@ -151,12 +155,12 @@ export const thunk = createMiddleware(function(dispatcher: Dispatcher<Action>) {
 - Initialize with `usePreMiddleware(...middleware: Middleware[])` or `usePostMiddleware(...middleware: Middleware[])` on application bootstrap:
 ```typescript
 import {bootstrap} from 'angular2/platform/browser';
-import {App} from './myapp';
+import {MyApp} from './my-app';
 import {provideStore, usePreMiddleware, Middleware} from '@ngrx/store';
 import {thunk} from './thunk';
 import {exampleReducer} from './exampleReducer';
 
-bootstrap(App, [
+bootstrap(MyApp, [
   provideStore({exampleReducer}),
   usePreMiddleware(thunk)
 ]);

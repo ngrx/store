@@ -9,6 +9,7 @@
             true,
             "spaces"
         ],
+        "no-unused-variable": true,
         "no-duplicate-variable": true,
         "no-eval": true,
         "no-internal-module": true,

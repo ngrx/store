@@ -1,6 +1,6 @@
 {
   "name": "@ngrx/store",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "RxJS powered Redux for Angular2 apps",
   "main": "./index.js",
   "scripts": {
@@ -29,7 +29,7 @@
   },
   "homepage": "https://github.com/ngrx/store#readme",
   "devDependencies": {
-    "angular2": "^2.0.0-beta.17",
+    "@angular/core": "^2.0.0-rc.0",
     "es6-promise": "^3.0.2",
     "es6-shim": "^0.35.0",
     "jasmine": "^2.4.1",
@@ -45,7 +45,7 @@
   },
   "peerDependencies": {
     "rxjs": "5.0.0-beta.6",
-    "angular2": "^2.0.0-beta.17"
+    "@angular/core": "^2.0.0-rc.0"
   },
   "typings": "./index.d.ts"
 }

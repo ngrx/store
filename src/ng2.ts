@@ -1,4 +1,4 @@
-import {provide, OpaqueToken, Provider, Injector} from 'angular2/core';
+import {provide, OpaqueToken, Provider, Injector} from '@angular/core';
 
 import {Reducer, Middleware} from './interfaces';
 import {Dispatcher} from './dispatcher';

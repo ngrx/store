@@ -4,14 +4,15 @@
   "description": "RxJS powered Redux for Angular2 apps",
   "main": "./index.js",
   "scripts": {
-    "test": "npm run build_test && jasmine",
-    "clean_test": "rm -rf tmp/",
-    "build_test": "npm run clean_test && tsc -p spec",
-    "build_dist": "rm -rf dist && tsc && npm run copy_package",
-    "copy_package": "cp package.json dist/package.json",
-    "prepublish": "npm run typings && npm run build_dist",
+    "clean": "rimraf node_modules typings dist tmp npm-debug.log && npm cache clean",
+    "clean:test": "rimraf tmp",
+    "clean:dist": "rimraf dist",
+    "build:dist": "npm run clean:dist && tsc && cp package.json dist/package.json",
     "lint": "tslint src/**.ts",
-    "typings": "typings install"
+    "test": "tsc -p spec && jasmine && npm run clean:test",
+    "typings": "typings install",
+    "prebuild:dist": "npm run typings",
+    "prepublish": "npm run build:dist"
   },
   "repository": {
     "type": "git",
@@ -37,11 +38,11 @@
     "jasmine-core": "^2.4.1",
     "lodash": "^3.10.1",
     "reflect-metadata": "0.1.2",
-    "rimraf": "^2.5.1",
+    "rimraf": "^2.5.2",
     "rxjs": "5.0.0-beta.6",
     "tslint": "^3.4.0",
     "typescript": "^1.8.10",
-    "typings": "^0.6.6",
+    "typings": "^0.8.1",
     "zone.js": "^0.6.12"
   },
   "peerDependencies": {

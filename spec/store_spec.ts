@@ -1,8 +1,8 @@
 declare var describe, it, expect, hot, cold, expectObservable, expectSubscriptions, console, beforeEach;
 require('es6-shim');
-import 'reflect-metadata';
-import {Store, Dispatcher, StoreBackend, Action, combineReducers} from '../src/index';
-import {provideStore} from '../src/ng2';
+require('reflect-metadata');
+import 'rxjs/add/operator/take';
+import {Store, Dispatcher, State, Action, combineReducers, provideStore} from '../src/index';
 import {Observable} from 'rxjs/Observable';
 import {ReflectiveInjector, provide} from '@angular/core';
 
@@ -29,7 +29,7 @@ describe('ngRx Store', () => {
 
     let injector: ReflectiveInjector;
     let store: Store<TestAppSchema>;
-    let dispatcher: Dispatcher<Action>;
+    let dispatcher: Dispatcher;
 
     beforeEach(() => {
       const rootReducer = combineReducers({
@@ -78,27 +78,16 @@ describe('ngRx Store', () => {
 
     });
 
-    it('should throw a type error if you attempt to select state without a valid key name or selector function', function() {
+    it('should appropriately handle initial state', (done) => {
 
-      const select = value => () => store.select(value);
-
-      expect(select(undefined)).toThrowError(TypeError, /got undefined/);
-      expect(select({})).toThrowError(TypeError, /got object/);
-      expect(select(true)).toThrowError(TypeError, /got boolean/);
-
-    });
-
-    it('should appropriately handle initial state', () => {
-
-      expect(store.value).toEqual({ counter1: 0, counter2: 1, counter3: 0 });
-
-    });
-
-
-    it('should appropriately handle initial state via subscription', () => {
-      store.subscribe(initialState => {
-        expect(initialState).toEqual({ counter1: 0, counter2: 1, counter3: 0 });
+      store.take(1).subscribe({
+        next(val) {
+          expect(val).toEqual({ counter1: 0, counter2: 1, counter3: 0 });
+        },
+        error: done,
+        complete: done
       });
+
     });
 
     it('should increment and decrement counter1', function() {
@@ -150,31 +139,6 @@ describe('ngRx Store', () => {
 
     });
 
-    it('should only push values when they change when .select() is used', function() {
-
-      const actionSequence = '--a--b--c--d--e';
-      const actionValues = {
-        a: { type: INCREMENT },
-        b: { type: INCREMENT },
-        c: { type: 'SOME_IRRELEVANT VALUE_THING' },
-        d: { type: RESET },
-        e: { type: INCREMENT }
-      };
-
-      const counterSteps = hot(actionSequence, actionValues);
-
-      counterSteps.subscribe((action) => store.dispatch(action));
-
-      const counter1State = store.select(s => s.counter1);
-
-      const stateSequence = 'i-v--w-----y--z';
-      const counter1Values = { i: 0, v: 1, w: 2, y: 0, z: 1 };
-
-
-      expectObservable(counter1State).toBe(stateSequence, counter1Values);
-
-    });
-
     it('should allow you to add a reducer later', function() {
 
       let currentState;
@@ -208,6 +172,18 @@ describe('ngRx Store', () => {
       expect(dispatcher.next).toHaveBeenCalledWith(1);
       expect(dispatcher.error).toHaveBeenCalledWith(2);
 
+    });
+
+    it('should not be completable', function() {
+
+      const storeSubscription = store.subscribe();
+      const dispatcherSubscription = dispatcher.subscribe();
+
+      store.complete();
+      dispatcher.complete();
+
+      expect(storeSubscription.isUnsubscribed).toBe(false);
+      expect(dispatcherSubscription.isUnsubscribed).toBe(false);
     });
   });
 });

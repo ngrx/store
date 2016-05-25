@@ -1,44 +1,27 @@
-import {Observable} from 'rxjs/Observable';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/distinctUntilChanged';
+import { SyncSubject } from '@ngrx/core/SyncSubject';
+import { select, SelectSignature } from '@ngrx/core/operator/select';
 
-import {Action, Reducer} from './interfaces';
-import {StoreBackend} from './store-backend';
-import {Dispatcher} from './dispatcher';
+import { Dispatcher, Action } from './dispatcher';
+import { State } from './state';
+import { Reducer, ActionReducer } from './reducer';
 
-export class Store<T> extends BehaviorSubject<T> {
+
+export class Store<T> extends SyncSubject<T> {
   constructor(
-    private _dispatcher: Dispatcher<Action>,
-    private _backend: StoreBackend,
-    initialState?: T
+    private _dispatcher: Dispatcher,
+    private _reducer: Reducer,
+    state$: State<T>,
+    initialState: T
   ) {
     super(initialState);
 
-    _backend.connect(state => super.next(state));
+    state$.subscribe(state => super.next(state));
   }
 
-  select<R>(keyOrSelector: ((state: T) => R) | string | number | symbol): Observable<R> {
-    if (
-      typeof keyOrSelector === 'string' ||
-      typeof keyOrSelector === 'number' ||
-      typeof keyOrSelector === 'symbol'
-    ) {
-      return this.map(state => state[keyOrSelector]).distinctUntilChanged();
-    }
-    else if (typeof keyOrSelector === 'function') {
-      return this.map(keyOrSelector).distinctUntilChanged();
-    }
-    else {
-      throw new TypeError(
-        `Store@select Unknown Parameter Type: `
-        + `Expected type of function or valid key type, got ${typeof keyOrSelector}`
-      );
-    }
-  }
+  select: SelectSignature<T> = select.bind(this);
 
-  getState() {
-    return this.value;
+  replaceReducer(reducer: ActionReducer<any>) {
+    this._reducer.replaceReducer(reducer);
   }
 
   dispatch(action: Action) {
@@ -46,14 +29,14 @@ export class Store<T> extends BehaviorSubject<T> {
   }
 
   next(action: any) {
-    this._dispatcher.next(action);
+    this._dispatcher.dispatch(action);
   }
 
-  error(error?: any) {
-    this._dispatcher.error(error);
+  error(err: any) {
+    this._dispatcher.error(err);
   }
 
-  replaceReducer<V>(reducer: Reducer<V>) {
-    this._backend.replaceReducer(reducer);
+  complete() {
+    // noop
   }
 }

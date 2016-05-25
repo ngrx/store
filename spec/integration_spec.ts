@@ -1,8 +1,7 @@
 declare var describe, it, expect, hot, cold, expectObservable, expectSubscriptions, console;
 require('es6-shim');
-import 'reflect-metadata';
-import {Store, Action, combineReducers, REDUCER, INITIAL_STATE} from '../src/index';
-import {provideStore} from '../src/ng2';
+require('reflect-metadata');
+import {Store, Action, combineReducers, INITIAL_REDUCER, INITIAL_STATE, provideStore} from '../src/index';
 import {Observable} from 'rxjs/Observable';
 import {ReflectiveInjector, provide} from '@angular/core';
 import 'rxjs/add/observable/combineLatest';
@@ -50,7 +49,7 @@ describe('ngRx Integration spec', () => {
       const reducers = { test: function(){} };
       spyOn(reducers, 'test');
       const action = { type: 'Test Action' };
-      const reducer = ReflectiveInjector.resolveAndCreate([ provideStore(reducers) ]).get(REDUCER);
+      const reducer = ReflectiveInjector.resolveAndCreate([ provideStore(reducers) ]).get(INITIAL_REDUCER);
 
       expect(reducer).toBeDefined();
       expect(typeof reducer === 'function').toBe(true);

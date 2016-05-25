@@ -10,10 +10,12 @@
 	},
 	"files": [
     "typings/main.d.ts",
-    "src/index.ts",
+    "src/dispatcher.ts",
+		"src/index.ts",
+		"src/ng2.ts",
+		"src/reducer.ts",
+		"src/state.ts",
 		"src/store.ts",
-		"src/store-backend.ts",
-		"src/dispatcher.ts",
-		"src/ng2.ts"
+		"src/utils.ts"
 	]
 }

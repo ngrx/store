@@ -1,0 +1,37 @@
+declare var describe, it, expect, hot, cold, expectObservable, expectSubscriptions, console, beforeEach;
+require('es6-shim');
+require('reflect-metadata');
+import {Observable} from 'rxjs/Observable';
+import {Subject} from 'rxjs/Subject';
+import {ReflectiveInjector, provide} from '@angular/core';
+
+import {Dispatcher, State, Reducer, Action, provideStore} from '../src/index';
+
+
+describe('ngRx State', () => {
+  const Reducer = { reduce: t => t };
+  const initialState = 123;
+  let injector: ReflectiveInjector;
+  let state: State<number>;
+  let dispatcher: Dispatcher;
+
+  beforeEach(() => {
+    spyOn(Reducer, 'reduce').and.callThrough();
+
+    injector = ReflectiveInjector.resolveAndCreate([
+      provideStore(Reducer.reduce, initialState)
+    ]);
+
+    state = injector.get(State);
+    dispatcher = injector.get(Dispatcher);
+  });
+
+  it('should call the reducer to scan over the dispatcher', function() {
+
+    state.subscribe();
+
+    expect(Reducer.reduce).toHaveBeenCalledWith(initialState, { type: Dispatcher.INIT });
+
+  });
+
+});

@@ -4,30 +4,41 @@
 [ ![Codeship Status for ngrx/store](https://img.shields.io/codeship/0c4f5b50-8372-0133-b304-425351b234ba/master.svg)](https://codeship.com/projects/121789)
 [![npm version](https://badge.fury.io/js/%40ngrx%2Fstore.svg)](https://badge.fury.io/js/%40ngrx%2Fstore)
 
-RxJS powered state management inspired by Redux for Angular2 apps
+RxJS powered state management inspired by Redux for Angular 2 apps
 
 ### Demo
 
 http://plnkr.co/edit/Hb4pJP3jGtOp6b7JubzS?p=preview
 
-### installation
-- Make sure you have angular2 installed via npm : `npm install angular2`
-- Install from npm : `npm install @ngrx/store`
+### Introduction
+- [Comprehensive Introduction to @ngrx/store](https://gist.github.com/btroncone/a6e4347326749f938510)
+- [Reactive Angular 2 with ngrx (video)](https://youtu.be/mhA7zZ23Odw)
+- [@ngrx/store in 10 minutes (video)](https://egghead.io/lessons/angular-2-ngrx-store-in-10-minutes)
 
-### usage
+### Installation
+Make sure you have  @angular/core and @ngrx/core installed via npm:
+```bash
+npm install @angular/core @ngrx/core --save
+```
 
-- Create a reducer function for each data type you have:
+Install @ngrx/store from npm:
+```bash
+npm install @ngrx/store --save
+```
 
-```typescript
-//counter.ts
-import {Reducer, Action} from '@ngrx/store';
+### Usage
+
+Create a reducer function for each data type you have in your application. The combination of these reducers will make up your application state:
+
+```ts
+// counter.ts
+import { ActionReducer, Action } from '@ngrx/store';
 
 export const INCREMENT = 'INCREMENT';
 export const DECREMENT = 'DECREMENT';
 export const RESET = 'RESET';
 
-export const counter:Reducer<number> = (state:number = 0, action:Action) => {
-
+export const counterReducer: ActionReducer<number> = (state: number = 0, action: Action) => {
 	switch (action.type) {
 		case INCREMENT:
 			return state + 1;
@@ -44,25 +55,25 @@ export const counter:Reducer<number> = (state:number = 0, action:Action) => {
 }
 ```
 
-- In your app's main module, import those reducers and use the `provideStore(reducers, initialState)` function to provide them to Angular's injector:
+In your app's main module, import those reducers and use the `provideStore(reducers)` function to provide them to Angular's injector:
 
-```typescript
+```ts
+import { bootstrap } from '@angular/platform-browser-dynamic';
+import { provideStore } from '@ngrx/store';
+import { App } from './myapp';
 
-import {bootstrap} from 'angular2/platform/bootstrap';
-import {provideStore} from '@ngrx/store';
-import {App} from './myapp';
+import { counterReducer } from './counter';
 
-import {counter} from './counter';
-
-bootstrap(App, [ provideStore({counter}, {counter: 0}) ]);
-
+bootstrap(App, [
+	provideStore({ counter: counterReducer })
+]);
 ```
 
-- You can then inject the `Store` service into your Components and Services:
+You can then inject the `Store` service into your components and services. The `store.select` method can be used to obtain the appropriate slice(s) of state from your application store:
 
-```typescript
-import {Store} from '@ngrx/store';
-import {INCREMENT, DECREMENT, RESET} from './counter';
+```ts
+import { Store } from '@ngrx/store';
+import { INCREMENT, DECREMENT, RESET } from './counter';
 
 interface AppState {
   counter: number;
@@ -71,97 +82,52 @@ interface AppState {
 @Component({
 	selector: 'my-app',
 	template: `
-	  <button (click)="increment()">Increment</button>
+		<button (click)="increment()">Increment</button>
 		<div>Current Count: {{ counter | async }}</div>
 		<button (click)="decrement()">Decrement</button>
 	`
 })
 class MyApp {
 	counter: Observable<number>;
+
 	constructor(public store: Store<AppState>){
 		this.counter = store.select('counter');
 	}
+
 	increment(){
 		this.store.dispatch({ type: INCREMENT });
 	}
+
 	decrement(){
 		this.store.dispatch({ type: DECREMENT });
 	}
+
 	reset(){
 		this.store.dispatch({ type: RESET });
 	}
 }
-
 ```
 
-###Middleware
-####`(observable: Observable<any>): Observable<any>`
-Store middleware provides pre and post reducer entry points for all dispatched actions. Middleware can be used for everything from logging, asynchronous event handling, to action or post action manipulation. 
+### Migrating from Store v1.x
 
-#####Dispatched action pipeline:
-1. Pre-Middleware : `(observable: Observable<Action>): Observable<Action>`
-2. Reducer
-3. Post-Middleware : `(observable: Observable<State>): Observable<State>`
+#### Middleware
+The middleware APIs have been removed. There are no plans to reintroduce these APIs and there is not a straightforward upgrade process if you rely on middleware.
 
-Middleware can be configured during application bootstrap by utilizing the `usePreMiddleware(...middleware: Middleware[])` and `usePostMiddleware(...middleware: Middleware[])` helper functions. 
+Some popular middleware libraries have already been upgraded. If you were using [store-saga](https://github.com/CodeSequence/store-saga), checkout [@ngrx/effects](https://github.com/ngrx/effects). If you were using [ngrx-store-logger](https://github.com/btroncone/ngrx-store-logger), it has been reimplemented as a [meta reducer](https://gist.github.com/btroncone/a6e4347326749f938510#implementing-a-meta-reducer).
 
-####usage
-*Warning: Remember to import all utilized RxJS operators.*
+#### getState(), getValue(), and value
+The APIs for synchronously pulling the most recent state value out of Store have been removed. Instead, you can _always_ rely on `subscribe()` running synchronously if you _have_ to get the state value:
 
-```typescript
-import {bootstrap} from 'angular2/platform/browser';
-import {App} from './myapp';
-import {provideStore, usePreMiddleware, usePostMiddleware, Middleware} from "@ngrx/store";
-import {counter} from "./counter";
+```ts
+function getState(store: Store<State>): State {
+	let state: State;
 
-const actionLog : Middleware = action => {
-    return action.do(val => {
-        console.warn('DISPATCHED ACTION: ', val)
-    });
-};
+	store.take(1).subscribe(s => state = s);
 
-const stateLog : Middleware = state => {
-    return state.do(val => {
-        console.info('NEW STATE: ', val)
-    });
-};
-
-bootstrap(App, [
-  provideStore({counter},{counter : 0}),
-  usePreMiddleware(actionLog),
-  usePostMiddleware(stateLog)
-]);
+	return state;
+}
 ```
 
-####Middleware with Dependencies
-For middleware requiring dependencies the `createMiddleware(useFactory: (...deps: any[]) => Middleware, deps?: any[]): Provider` helper function is supplied. This allows you to quickly create middleware that relies on other Angular services, such as the `Dispatcher`.
-####usage
-- Create middleware provider:
-```typescript
-export const thunk = createMiddleware(function(dispatcher: Dispatcher<Action>) {
-  return function(all$: Observable<Action | Thunk>){
-    const [thunks$, actions$] = all$.partition(t => typeof t === 'function');
-
-    thunks$.forEach(thunk => thunk(action => dispatcher.dispatch(action));
-
-    return actions$;
-  }
-}, [Dispatcher]);
-```
-- Initialize with `usePreMiddleware(...middleware: Middleware[])` or `usePostMiddleware(...middleware: Middleware[])` on application bootstrap:
-```typescript
-import {bootstrap} from 'angular2/platform/browser';
-import {App} from './myapp';
-import {provideStore, usePreMiddleware, Middleware} from '@ngrx/store';
-import {thunk} from './thunk';
-import {exampleReducer} from './exampleReducer';
-
-bootstrap(App, [
-  provideStore({exampleReducer}),
-  usePreMiddleware(thunk)
-]);
-```
 ## Contributing
 
 Please read [contributing guidelines here](https://github.com/ngrx/store/blob/master/CONTRIBUTING.md).
-

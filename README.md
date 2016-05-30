@@ -10,6 +10,10 @@ RxJS powered state management inspired by Redux for Angular 2 apps
 
 http://plnkr.co/edit/Hb4pJP3jGtOp6b7JubzS?p=preview
 
+### Example Application
+
+https://github.com/ngrx/example-app
+
 ### Introduction
 - [Comprehensive Introduction to @ngrx/store](https://gist.github.com/btroncone/a6e4347326749f938510)
 - [Reactive Angular 2 with ngrx (video)](https://youtu.be/mhA7zZ23Odw)

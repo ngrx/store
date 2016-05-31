@@ -11,8 +11,8 @@
     "lint": "tslint src/**.ts",
     "test": "tsc -p spec && jasmine && npm run clean:test",
     "typings": "typings install",
-    "postinstall": "npm run typings",
-    "publish:pre": "npm run typings && npm run build:dist"
+    "prebuild:dist": "npm run typings",
+    "publish:pre": "npm run build:dist"
   },
   "repository": {
     "type": "git",

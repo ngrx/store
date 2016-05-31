@@ -4,8 +4,7 @@
 
 ```
 npm install
-typings install
-npm run clean_ng2
+npm run typings
 ```
 
 ### Testing

@@ -166,7 +166,7 @@ describe('ngRx Store', () => {
       spyOn(dispatcher, 'next');
       spyOn(dispatcher, 'error');
 
-      store.next(1);
+      store.next(<any>1);
       store.error(2);
 
       expect(dispatcher.next).toHaveBeenCalledWith(1);

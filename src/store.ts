@@ -1,35 +1,37 @@
-import { SyncSubject } from '@ngrx/core/SyncSubject';
 import { select, SelectSignature } from '@ngrx/core/operator/select';
+import { Observer } from 'rxjs/Observer';
+import { Observable } from 'rxjs/Observable';
 
-import { Dispatcher, Action } from './dispatcher';
+import { Action } from './dispatcher';
 import { State } from './state';
-import { Reducer, ActionReducer } from './reducer';
+import { ActionReducer } from './reducer';
 
 
-export class Store<T> extends SyncSubject<T> {
+export class Store<T> extends Observable<T> implements Observer<Action> {
   constructor(
-    private _dispatcher: Dispatcher,
-    private _reducer: Reducer,
-    state$: State<T>,
-    initialState: T
+    private _dispatcher: Observer<Action>,
+    private _reducer: Observer<ActionReducer<any>>,
+    state$: Observable<T>
   ) {
-    super(initialState);
+    super(subscriber => {
+      const subscription = state$.subscribe(subscriber);
 
-    state$.subscribe(state => super.next(state));
+      return () => subscription.unsubscribe();
+    });
   }
 
   select: SelectSignature<T> = select.bind(this);
 
   replaceReducer(reducer: ActionReducer<any>) {
-    this._reducer.replaceReducer(reducer);
+    this._reducer.next(reducer);
   }
 
   dispatch(action: Action) {
-    this._dispatcher.dispatch(action);
+    this._dispatcher.next(action);
   }
 
-  next(action: any) {
-    this._dispatcher.dispatch(action);
+  next(action: Action) {
+    this._dispatcher.next(action);
   }
 
   error(err: any) {

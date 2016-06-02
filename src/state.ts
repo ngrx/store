@@ -2,12 +2,12 @@ import { withLatestFrom } from 'rxjs/operator/withLatestFrom';
 import { scan } from 'rxjs/operator/scan';
 import { observeOn } from 'rxjs/operator/observeOn';
 import { queue } from 'rxjs/scheduler/queue';
-import { SyncSubject } from '@ngrx/core/SyncSubject';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { Dispatcher } from './dispatcher';
 import { Reducer } from './reducer';
 
-export class State<T> extends SyncSubject<T> {
+export class State<T> extends BehaviorSubject<T> {
   constructor(_initialState: T, action$: Dispatcher, reducer$: Reducer) {
     super(_initialState);
 

@@ -30,6 +30,31 @@ Install @ngrx/store from npm:
 npm install @ngrx/store --save
 ```
 
+Set up with Angular-CLI and SystemJS.
+Modify system-config.ts:
+```ts
+    /** Map relative paths to URLs. */
+    const map: any = {
+        '@ngrx': 'vendor/@ngrx'
+    };
+    
+    /** User packages configuration. */
+    const packages: any = {
+        '@ngrx/core': {
+            main: 'index.js',
+            format: 'cjs'
+        },
+        '@ngrx/store': {
+            main: 'index.js',
+            format: 'cjs'
+        }
+    };
+```
+Modify angular-cli-build.js by adding this line to vendorNpmFiles:
+```js
+    '@ngrx/**/*.+(js|js.map)'
+```
+
 ### Usage
 
 Create a reducer function for each data type you have in your application. The combination of these reducers will make up your application state:

@@ -9,7 +9,7 @@
     "build_test": "npm run clean_test && tsc -p spec",
     "build_dist": "rm -rf dist && tsc && npm run copy_package",
     "copy_package": "cp package.json dist/package.json",
-    "_prepublish": "npm run typings && npm run build_dist",
+    "prepublish": "npm run typings && npm run build_dist",
     "lint": "tslint src/**.ts",
     "typings": "typings install"
   },
@@ -29,7 +29,7 @@
   },
   "homepage": "https://github.com/ngrx/store#readme",
   "devDependencies": {
-    "@angular/core": "^2.0.0-rc.0",
+    "@angular/core": "^2.0.0-rc.1",
     "@ngrx/core": "^1.0.0",
     "es6-promise": "^3.0.2",
     "es6-shim": "^0.35.0",
@@ -47,7 +47,7 @@
   "peerDependencies": {
     "@ngrx/core": "^1.0.0",
     "rxjs": "5.0.0-beta.6",
-    "@angular/core": "^2.0.0-rc.0"
+    "@angular/core": "^2.0.0-rc.1"
   },
   "typings": "./index.d.ts"
 }

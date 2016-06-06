@@ -9,7 +9,7 @@
     "build_test": "npm run clean_test && tsc -p spec",
     "build_dist": "rm -rf dist && tsc && npm run copy_package",
     "copy_package": "cp package.json dist/package.json",
-    "_prepublish": "npm run typings && npm run build_dist",
+    "prepublish": "npm run typings && npm run build_dist",
     "lint": "tslint src/**.ts",
     "typings": "typings install"
   },

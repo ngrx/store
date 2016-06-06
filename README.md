@@ -1,7 +1,8 @@
 # @ngrx/store
 
 [![Join the chat at https://gitter.im/ngrx/store](https://badges.gitter.im/ngrx/store.svg)](https://gitter.im/ngrx/store?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[ ![Codeship Status for ngrx/store](https://img.shields.io/codeship/0c4f5b50-8372-0133-b304-425351b234ba/master.svg)](https://codeship.com/projects/121789)
+[![CircleCI Status for ngrx/store](https://circleci.com/gh/ngrx/store.svg?style=shield&circle-token=aea1fc73de3419cd926fc95e627e036113646fd8
+)](https://circleci.com/gh/ngrx/store)
 [![npm version](https://badge.fury.io/js/%40ngrx%2Fstore.svg)](https://badge.fury.io/js/%40ngrx%2Fstore)
 
 RxJS powered state management inspired by Redux for Angular 2 apps

@@ -15,6 +15,10 @@ export class Reducer extends SyncSubject<ActionReducer<any>> {
 
   replaceReducer(reducer: ActionReducer<any>) {
     this.next(reducer);
+  }
+
+  next(reducer: ActionReducer<any>) {
+    super.next(reducer);
     this._dispatcher.dispatch({ type: Reducer.REPLACE });
   }
 }

@@ -152,7 +152,7 @@ The APIs for synchronously pulling the most recent state value out of Store have
 function getState(store: Store<State>): State {
 	let state: State;
 
-	store.take(1).subscribe(s => state = s);
+	store.take(1).subscribe(s => state = s).unsubscribe();
 
 	return state;
 }

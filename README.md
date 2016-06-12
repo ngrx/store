@@ -149,6 +149,8 @@ Some popular middleware libraries have already been upgraded. If you were using 
 The APIs for synchronously pulling the most recent state value out of Store have been removed. Instead, you can _always_ rely on `subscribe()` running synchronously if you _have_ to get the state value:
 
 ```ts
+import 'rxjs/add/operator/take';
+
 function getState(store: Store<State>): State {
 	let state: State;
 

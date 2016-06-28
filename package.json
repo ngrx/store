@@ -6,7 +6,7 @@
   "scripts": {
     "test": "npm run build_test && jasmine",
     "clean_test": "rm -rf tmp/",
-    "build_test": "npm run clean_test && tsc -p spec",
+    "build_test": "npm run clean_test && npm run typings && tsc -p spec",
     "build_dist": "rm -rf dist && tsc && npm run copy_package",
     "copy_package": "cp package.json dist/package.json",
     "lint": "tslint src/**.ts",

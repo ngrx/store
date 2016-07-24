@@ -1,12 +1,11 @@
-import { SyncSubject } from '@ngrx/core/SyncSubject';
-import {Observable} from 'rxjs/Observable';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 export interface Action {
   type: string;
   payload?: any;
 }
 
-export class Dispatcher extends SyncSubject<Action> {
+export class Dispatcher extends BehaviorSubject<Action> {
   static INIT = '@ngrx/store/init';
 
   constructor() {

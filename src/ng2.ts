@@ -18,9 +18,9 @@ const dispatcherProvider = {
 
 const storeProvider = {
   provide: Store,
-  deps: [Dispatcher, Reducer, State, INITIAL_STATE],
-  useFactory(dispatcher: Dispatcher, reducer: Reducer, state$: State<any>, initialState: any) {
-      return new Store<any>(dispatcher, reducer, state$, initialState);
+  deps: [Dispatcher, Reducer, State],
+  useFactory(dispatcher: Dispatcher, reducer: Reducer, state$: State<any>) {
+      return new Store<any>(dispatcher, reducer, state$);
   }
 };
 

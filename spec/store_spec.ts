@@ -2,7 +2,7 @@ declare var describe, it, expect, hot, cold, expectObservable, expectSubscriptio
 require('es6-shim');
 require('reflect-metadata');
 import 'rxjs/add/operator/take';
-import {Store, Dispatcher, State, Action, combineReducers, provideStore} from '../src/index';
+import {Store, Dispatcher, State, Action, combineReducers, StoreModule} from '../src/index';
 import {Observable} from 'rxjs/Observable';
 import {ReflectiveInjector, provide} from '@angular/core';
 
@@ -41,7 +41,7 @@ describe('ngRx Store', () => {
       const initialValue = { counter1: 0, counter2: 1 };
 
       injector = ReflectiveInjector.resolveAndCreate([
-        provideStore(rootReducer, initialValue)
+        StoreModule.provideStore(rootReducer, initialValue).providers
       ]);
 
       store = injector.get(Store);

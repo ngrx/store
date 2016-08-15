@@ -4,7 +4,9 @@
     "*.js"
   ],
   "helpers": [
+    "node_modules/core-js",
     "helpers/test-helper.js",
-    "node_modules/rxjs/testing/*.js"
+    "node_modules/rxjs/testing/*.js",
+    "node_modules/core-js/client/core.js"
   ]
 }

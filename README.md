@@ -85,18 +85,21 @@ export const counterReducer: ActionReducer<number> = (state: number = 0, action:
 }
 ```
 
-In your app's main module, import those reducers and use the `provideStore(reducers)` function to provide them to Angular's injector:
+In your app's main module, import those reducers and use the `StoreModule.provideStore(reducers, initialState)` function to provide them to Angular's injector:
 
 ```ts
-import { bootstrap } from '@angular/platform-browser-dynamic';
-import { provideStore } from '@ngrx/store';
-import { App } from './myapp';
-
+import { Store, StoreModule } from '@ngrx/store';
 import { counterReducer } from './counter';
+import { NgModule } from '@angular/core'
 
-bootstrap(App, [
-	provideStore({ counter: counterReducer })
-]);
+@NgModule({
+  imports: [
+    BrowserModule,
+    StoreModule.provideStore({ counter: counterReducer }, { counter: 0 })
+  ]
+})
+export class MyAppModule {}
+
 ```
 
 You can then inject the `Store` service into your components and services. The `store.select` method can be used to obtain the appropriate slice(s) of state from your application store:

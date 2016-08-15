@@ -5,7 +5,7 @@ import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 import {ReflectiveInjector, provide} from '@angular/core';
 
-import {Dispatcher, State, Reducer, Action, provideStore} from '../src/index';
+import {Dispatcher, State, Reducer, Action, provideStore, StoreModule} from '../src/index';
 
 
 describe('ngRx State', () => {
@@ -19,7 +19,7 @@ describe('ngRx State', () => {
     spyOn(Reducer, 'reduce').and.callThrough();
 
     injector = ReflectiveInjector.resolveAndCreate([
-      provideStore(Reducer.reduce, initialState)
+      StoreModule.provideStore(Reducer.reduce, initialState).providers
     ]);
 
     state = injector.get(State);

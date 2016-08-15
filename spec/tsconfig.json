@@ -5,11 +5,14 @@
 		"experimentalDecorators": true,
 		"module": "commonjs",
 		"moduleResolution": "node",
-		"outDir": "../tmp"
+		"outDir": "../tmp",
+    "lib": [ "es2015", "dom" ],
+    "typeRoots": [
+      "../node_modules/@types"
+    ]
 	},
 	"files": [
-    "../typings/main.d.ts",
-		"helpers/test-helper.ts",
+    "helpers/test-helper.ts",
     "integration_spec.ts",
 		"store_spec.ts",
 		"state_spec.ts",

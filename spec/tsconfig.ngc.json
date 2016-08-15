@@ -10,5 +10,8 @@
 	},
 	"files": [
     "ngc_spec.ts"
-	]
+	],
+  "angularCompilerOptions": {
+    "genDir": "ngfactory"
+  }
 }

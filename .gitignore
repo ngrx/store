@@ -31,4 +31,4 @@ typings
 dist
 *.tgz
 .idea
-spec/ngc_spec.ngfactory.ts
+spec/ngfactory/

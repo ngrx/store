@@ -1,28 +1,44 @@
 import { NgModule, Component } from '@angular/core'
 import { platformDynamicServer } from '@angular/platform-server'
 import { BrowserModule } from '@angular/platform-browser'
-import { provideStore, Store } from '../dist/index'
+import { Store, StoreModule } from '../dist/index'
+import { counterReducer, INCREMENT, DECREMENT } from './fixtures/counter'
+import { Observable } from 'rxjs/Observable'
+
+export interface AppState {
+  count: number
+}
+
+export const storeConfig = {count: counterReducer}
+export const initialState = { count : 0 }
 
 @Component({
   selector: 'ngc-spec-component',
   template: `
     <button (click)="increment()"> + </button>
-    <span>  Count : {{count | async }}  </span>
+    <span>  Count : {{ count | async }}  </span>
     <button (click)="decrement()"> + </button>
   `
 })
 export class NgcSpecComponent {
-  constructor(store:Store<any>){
-    console.log(store)
+  count: Observable<number>
+  constructor(public store:Store<AppState>){
+    this.count = store.select(state => state.count);
+  }
+  increment(){
+    this.store.dispatch({ type: INCREMENT });
+  }
+  decrement(){
+    this.store.dispatch({ type: DECREMENT });
   }
 }
 
 @NgModule({
   imports: [
-    BrowserModule
+    BrowserModule,
+    StoreModule.provideStore(storeConfig, initialState)
   ],
   declarations: [NgcSpecComponent],
-  bootstrap: [NgcSpecComponent],
-  providers: [provideStore({},{})]
+  bootstrap: [NgcSpecComponent]
 })
 export class NgcSpecModule {}

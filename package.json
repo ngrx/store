@@ -13,7 +13,7 @@
     "test:ngc": "ngc -p spec/tsconfig.ngc.json",
     "typings": "typings install",
     "prebuild:dist": "npm run typings",
-    "prepublish": "npm run build:dist"
+    "prepublish:dist": "npm run build:dist"
   },
   "repository": {
     "type": "git",
@@ -39,6 +39,8 @@
     "@angular/platform-server": "^2.0.0-rc.5",
     "@angular/tsc-wrapped": "^0.2.2",
     "@ngrx/core": "^1.0.0",
+    "@types/jasmine": "^2.2.31",
+    "@types/node": "^6.0.33",
     "core-js": "^2.4.1",
     "es6-promise": "^3.0.2",
     "es6-shim": "^0.35.0",
@@ -49,7 +51,7 @@
     "rimraf": "^2.5.2",
     "rxjs": "5.0.0-beta.6",
     "tslint": "^3.4.0",
-    "typescript": "^2.1.0-dev.20160814",
+    "typescript": "next",
     "typings": "^0.8.1",
     "zone.js": "^0.6.12"
   },

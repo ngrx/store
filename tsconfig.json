@@ -10,12 +10,9 @@
     "lib": ["es2015", "dom"]
 	},
 	"files": [
-    "src/dispatcher.ts",
-		"src/index.ts",
-		"src/ng2.ts",
-		"src/reducer.ts",
-		"src/state.ts",
-		"src/store.ts",
-		"src/utils.ts"
-	]
+    "src/index.ts"
+	],
+  "angularCompilerOptions": {
+    "skipTemplateCodegen": true
+  }
 }

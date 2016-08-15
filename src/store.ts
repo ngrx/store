@@ -22,7 +22,7 @@ export class Store<T> extends Observable<T> implements Observer<Action> {
 
   select: SelectSignature<T> = select.bind(this);
 
-  lift<R>(operator: Operator<T,R>): Store<R> {
+  lift<R>(operator: Operator<T, R>): Store<R> {
     const store = new Store<R>(this._dispatcher, this._reducer, this);
     store.operator = operator;
     return store;

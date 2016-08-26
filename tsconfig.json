@@ -8,7 +8,8 @@
 		"outDir": "dist",
 		"declaration": true,
     "lib": ["es2015", "dom"],
-    "sourceMap": true
+    "sourceMap": true,
+    "inlineSources": true
 	},
 	"files": [
     "src/index.ts"

@@ -88,7 +88,7 @@ export const counterReducer: ActionReducer<number> = (state: number = 0, action:
 In your app's main module, import those reducers and use the `StoreModule.provideStore(reducers, initialState)` function to provide them to Angular's injector:
 
 ```ts
-import { Store, StoreModule } from '@ngrx/store';
+import { StoreModule } from '@ngrx/store';
 import { counterReducer } from './counter';
 import { NgModule } from '@angular/core'
 

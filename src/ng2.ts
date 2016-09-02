@@ -49,7 +49,7 @@ export function provideStore(_reducer: any, _initialState?: any): any[] {
     { provide: INITIAL_REDUCER, useFactory: _initialReducerFactory, deps: [_INITIAL_REDUCER] },
     { provide: INITIAL_STATE, useFactory: _initialStateFactory, deps: [_INITIAL_STATE, INITIAL_REDUCER] },
     { provide: _INITIAL_STATE, useValue: _initialState },
-    { provide: _INITIAL_REDUCER, useValue: _reducer }
+    { provide: _INITIAL_REDUCER, useFactory: _reducer }
   ];
 }
 

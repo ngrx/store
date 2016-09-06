@@ -16,6 +16,7 @@
     "integration_spec.ts",
 		"store_spec.ts",
 		"state_spec.ts",
-    "edge_spec.ts"
+    "edge_spec.ts",
+		"ng2_spec.ts"
 	]
 }

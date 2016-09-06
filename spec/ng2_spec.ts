@@ -25,23 +25,25 @@ interface TodoAppSchema {
 
 describe('ngRx Store', () => {
 
-  describe('basic store actions', function() {
+  describe('basic store wtih useFactory', function() {
 
     let injector: ReflectiveInjector;
     let store: Store<TestAppSchema>;
     let dispatcher: Dispatcher;
 
     beforeEach(() => {
-      const rootReducer = combineReducers({
-        counter1: counterReducer,
-        counter2: counterReducer,
-        counter3: counterReducer
-      });
+      function rootReducer(){
+        return combineReducers({
+          counter1: counterReducer,
+          counter2: counterReducer,
+          counter3: counterReducer
+        });
+      }
 
       const initialValue = { counter1: 0, counter2: 1 };
 
       injector = ReflectiveInjector.resolveAndCreate([
-        StoreModule.provideStore(rootReducer, initialValue).providers
+        StoreModule.provideStore(rootReducer, initialValue, true).providers
       ]);
 
       store = injector.get(Store);

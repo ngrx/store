@@ -40,7 +40,11 @@ export function _reducerFactory(dispatcher, reducer) {
 /**
  * @deprecated, use StoreModule.provideStore instead!
  */
-export function provideStore(_reducer: any, _initialState?: any): any[] {
+export function provideStore(_reducer: any, _initialState?: any, useFactory = false): any[] {
+  let InitialReducerProvider: any = { provide: _INITIAL_REDUCER, useValue: _reducer };
+  if(useFactory){
+    InitialReducerProvider = { provide: _INITIAL_REDUCER, useFactory: _reducer };
+  }
   return [
     Dispatcher,
     { provide: Store, useFactory: _storeFactory, deps: [Dispatcher, Reducer, State] },
@@ -49,17 +53,17 @@ export function provideStore(_reducer: any, _initialState?: any): any[] {
     { provide: INITIAL_REDUCER, useFactory: _initialReducerFactory, deps: [_INITIAL_REDUCER] },
     { provide: INITIAL_STATE, useFactory: _initialStateFactory, deps: [_INITIAL_STATE, INITIAL_REDUCER] },
     { provide: _INITIAL_STATE, useValue: _initialState },
-    { provide: _INITIAL_REDUCER, useFactory: _reducer }
+    InitialReducerProvider
   ];
 }
 
 
 @NgModule({})
 export class StoreModule {
-  static provideStore(_reducer: any, _initialState?:any): ModuleWithProviders {
+  static provideStore(_reducer: any, _initialState?:any, useFactory = false): ModuleWithProviders {
     return {
       ngModule: StoreModule,
-      providers: provideStore(_reducer, _initialState)
+      providers: provideStore(_reducer, _initialState, useFactory)
     };
   }
 }

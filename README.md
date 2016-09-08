@@ -62,13 +62,13 @@ Create a reducer function for each data type you have in your application. The c
 
 ```ts
 // counter.ts
-import { ActionReducer, Action } from '@ngrx/store';
+import { Action } from '@ngrx/store';
 
 export const INCREMENT = 'INCREMENT';
 export const DECREMENT = 'DECREMENT';
 export const RESET = 'RESET';
 
-export const counterReducer: ActionReducer<number> = (state: number = 0, action: Action) => {
+export function counterReducer(state: number = 0, action: Action): number {
 	switch (action.type) {
 		case INCREMENT:
 			return state + 1;

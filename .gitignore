@@ -31,4 +31,6 @@ typings
 dist
 *.tgz
 .idea
-spec/ngfactory/
+spec/ngc/ngfactory/
+spec/ngc/output/
+release

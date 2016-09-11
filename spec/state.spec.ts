@@ -1,11 +1,8 @@
-declare var describe, it, expect, hot, cold, expectObservable, expectSubscriptions, console, beforeEach;
-require('es6-shim');
-require('reflect-metadata');
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
-import {ReflectiveInjector, provide} from '@angular/core';
+import {ReflectiveInjector} from '@angular/core';
 
-import {Dispatcher, State, Reducer, Action, provideStore, StoreModule} from '../src/index';
+import {Dispatcher, State, Reducer, Action, provideStore, StoreModule} from '../';
 
 
 describe('ngRx State', () => {

@@ -6,7 +6,7 @@ const _ = require('lodash');
 const root = require('rxjs/util/root').root;
 import {TestScheduler} from 'rxjs/testing/TestScheduler';
 
-import marbleHelpers from './marble-testing';
+import * as marbleHelpers from './marble-testing';
 
 global.rxTestScheduler = null;
 global.cold = marbleHelpers.cold;

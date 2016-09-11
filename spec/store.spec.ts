@@ -1,11 +1,9 @@
-declare var describe, it, expect, hot, cold, expectObservable, expectSubscriptions, console, beforeEach;
-require('es6-shim');
-require('reflect-metadata');
 import 'rxjs/add/operator/take';
-import {Store, Dispatcher, State, Action, combineReducers, StoreModule} from '../src/index';
 import {Observable} from 'rxjs/Observable';
-import {ReflectiveInjector, provide} from '@angular/core';
+import {ReflectiveInjector} from '@angular/core';
+import { hot, expectObservable } from './helpers/marble-testing';
 
+import {Store, Dispatcher, State, Action, combineReducers, StoreModule} from '../';
 import {counterReducer, INCREMENT, DECREMENT, RESET} from './fixtures/counter';
 
 interface TestAppSchema {
@@ -190,8 +188,8 @@ describe('ngRx Store', () => {
       store.complete();
       dispatcher.complete();
 
-      expect(storeSubscription.isUnsubscribed).toBe(false);
-      expect(dispatcherSubscription.isUnsubscribed).toBe(false);
+      expect(storeSubscription.closed).toBe(false);
+      expect(dispatcherSubscription.closed).toBe(false);
     });
   });
 });

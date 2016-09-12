@@ -8,6 +8,8 @@ export function combineReducers(reducers: any): ActionReducer<any> {
     const key = reducerKeys[i];
     if (typeof reducers[key] === 'function') {
       finalReducers[key] = reducers[key];
+    } else {
+      finalReducers[key] = combineReducers(reducers[key]);
     }
   }
 

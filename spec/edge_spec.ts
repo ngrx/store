@@ -4,7 +4,7 @@ require('reflect-metadata');
 import {Store, Dispatcher, State, Action, combineReducers} from '../src/index';
 import {StoreModule} from '../src/ng2';
 import {Observable} from 'rxjs/Observable';
-import {ReflectiveInjector, provide} from '@angular/core';
+import {ReflectiveInjector} from '@angular/core';
 
 import {todos, todoCount} from './fixtures/edge_todos';
 

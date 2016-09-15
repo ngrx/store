@@ -1,16 +1,16 @@
-import { NgModule, Component } from '@angular/core'
-import { platformDynamicServer } from '@angular/platform-server'
-import { BrowserModule } from '@angular/platform-browser'
-import { Store, StoreModule } from '../dist/index'
-import { counterReducer, INCREMENT, DECREMENT } from './fixtures/counter'
-import { Observable } from 'rxjs/Observable'
+import { NgModule, Component } from '@angular/core';
+import { platformDynamicServer } from '@angular/platform-server';
+import { BrowserModule } from '@angular/platform-browser';
+import { Store, StoreModule } from '../../';
+import { counterReducer, INCREMENT, DECREMENT } from '../fixtures/counter';
+import { Observable } from 'rxjs/Observable';
 
 export interface AppState {
-  count: number
+  count: number;
 }
 
-export const storeConfig = {count: counterReducer}
-export const initialState = { count : 0 }
+export const storeConfig = {count: counterReducer};
+export const initialState = { count : 0 };
 
 @Component({
   selector: 'ngc-spec-component',
@@ -21,7 +21,7 @@ export const initialState = { count : 0 }
   `
 })
 export class NgcSpecComponent {
-  count: Observable<number>
+  count: Observable<number>;
   constructor(public store:Store<AppState>){
     this.count = store.select(state => state.count);
   }

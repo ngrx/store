@@ -1,12 +1,9 @@
-declare var describe, fit, it, expect, hot, cold, expectObservable, expectSubscriptions, console, beforeEach;
-require('es6-shim');
-require('reflect-metadata');
-import {Store, Dispatcher, State, Action, combineReducers} from '../src/index';
-import {StoreModule} from '../src/ng2';
+import {ReflectiveInjector} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
-import {ReflectiveInjector, provide} from '@angular/core';
-
 import {todos, todoCount} from './fixtures/edge_todos';
+
+import {Store, StoreModule, Dispatcher, State, Action, combineReducers} from '../';
+
 
 interface TestAppSchema {
   counter1: number;

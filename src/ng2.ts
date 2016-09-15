@@ -1,9 +1,10 @@
+import { OpaqueToken, NgModule, ModuleWithProviders } from '@angular/core';
+
 import { Reducer } from './reducer';
 import { Dispatcher } from './dispatcher';
 import { Store } from './store';
 import { State } from './state';
 import { combineReducers } from './utils';
-import { OpaqueToken, NgModule, ModuleWithProviders } from '@angular/core';
 
 export const INITIAL_REDUCER = new OpaqueToken('Token ngrx/store/reducer');
 export const INITIAL_STATE = new OpaqueToken('Token ngrx/store/initial-state');

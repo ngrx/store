@@ -1,11 +1,8 @@
-declare var describe, it, expect, hot, cold, expectObservable, expectSubscriptions, console;
-require('es6-shim');
-require('reflect-metadata');
-import {Store, StoreModule, Action, combineReducers, INITIAL_REDUCER, INITIAL_STATE} from '../src/index';
 import {Observable} from 'rxjs/Observable';
-import {ReflectiveInjector, provide} from '@angular/core';
+import {ReflectiveInjector} from '@angular/core';
 import 'rxjs/add/observable/combineLatest';
 
+import {Store, StoreModule, Action, combineReducers, INITIAL_REDUCER, INITIAL_STATE} from '../';
 import {counterReducer, INCREMENT, DECREMENT, RESET} from './fixtures/counter';
 import {todos, visibilityFilter, VisibilityFilters, SET_VISIBILITY_FILTER, ADD_TODO, COMPLETE_TODO, COMPLETE_ALL_TODOS} from './fixtures/todos';
 

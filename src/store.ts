@@ -1,4 +1,4 @@
-import { select, SelectSignature } from '@ngrx/core/operator/select';
+import { select, SelectSignature } from '@ngrx/core/src/operator/select';
 import { Observer } from 'rxjs/Observer';
 import { Observable } from 'rxjs/Observable';
 import { Subscriber } from 'rxjs/Subscriber';

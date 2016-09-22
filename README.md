@@ -124,7 +124,7 @@ class MyApp {
 	counter: Observable<number>;
 
 	constructor(public store: Store<AppState>){
-		this.counter = store.select('counter');
+		this.counter = store.select(s => s.counter);
 	}
 
 	increment(){

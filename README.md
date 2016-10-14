@@ -21,7 +21,7 @@ https://github.com/ngrx/example-app
 - [@ngrx/store in 10 minutes (video)](https://egghead.io/lessons/angular-2-ngrx-store-in-10-minutes)
 
 ### Installation
-Make sure you have  @angular/core and @ngrx/core installed via npm:
+Make sure you have @angular/core and @ngrx/core installed via npm:
 ```bash
 npm install @angular/core @ngrx/core --save
 ```
@@ -29,31 +29,6 @@ npm install @angular/core @ngrx/core --save
 Install @ngrx/store from npm:
 ```bash
 npm install @ngrx/store --save
-```
-
-Set up with Angular-CLI and SystemJS.
-Modify system-config.ts:
-```ts
-    /** Map relative paths to URLs. */
-    const map: any = {
-        '@ngrx': 'vendor/@ngrx'
-    };
-    
-    /** User packages configuration. */
-    const packages: any = {
-        '@ngrx/core': {
-            main: 'index.js',
-            format: 'cjs'
-        },
-        '@ngrx/store': {
-            main: 'index.js',
-            format: 'cjs'
-        }
-    };
-```
-Modify angular-cli-build.js by adding this line to vendorNpmFiles:
-```js
-    '@ngrx/**/*.+(js|js.map)'
 ```
 
 ### Usage

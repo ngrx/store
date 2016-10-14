@@ -31,30 +31,11 @@ Install @ngrx/store from npm:
 npm install @ngrx/store --save
 ```
 
-Set up with Angular-CLI and SystemJS.
-Modify system-config.ts:
+If you are using the new Angular CLI that utilises Webpack this should be all you need to do in order to start using: 
 ```ts
-    /** Map relative paths to URLs. */
-    const map: any = {
-        '@ngrx': 'vendor/@ngrx'
-    };
-    
-    /** User packages configuration. */
-    const packages: any = {
-        '@ngrx/core': {
-            main: 'index.js',
-            format: 'cjs'
-        },
-        '@ngrx/store': {
-            main: 'index.js',
-            format: 'cjs'
-        }
-    };
+import { ActionReducer, Action } from '@ngrx/store'   
 ```
-Modify angular-cli-build.js by adding this line to vendorNpmFiles:
-```js
-    '@ngrx/**/*.+(js|js.map)'
-```
+etc. in your app. If you are using a different bundler or build pipeline you will need to add whatever mappings are needed to allow aliasing the path of the @ngrx modules in your import statements.
 
 ### Usage
 

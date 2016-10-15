@@ -1,64 +1,53 @@
 # @ngrx/store
+RxJS powered state management for Angular applications, inspired by Redux
 
 [![Join the chat at https://gitter.im/ngrx/store](https://badges.gitter.im/ngrx/store.svg)](https://gitter.im/ngrx/store?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![CircleCI Status for ngrx/store](https://circleci.com/gh/ngrx/store.svg?style=shield&circle-token=aea1fc73de3419cd926fc95e627e036113646fd8
 )](https://circleci.com/gh/ngrx/store)
 [![npm version](https://badge.fury.io/js/%40ngrx%2Fstore.svg)](https://badge.fury.io/js/%40ngrx%2Fstore)
 
-RxJS powered state management inspired by Redux for Angular 2 apps
+@ngrx/store is a controlled state container designed to help write performant, consistent applications
+on top of Angular. Core tenets:
+- State is a single immutable data structure
+- Actions describe state changes
+- Pure functions called reducers take the previous state and the next action to compute the new state
+- State accessed with the `Store`, an observable of state and an observer of actions
 
-### Demo
+These core principles enable building components that can use the `OnPush` change detection strategy
+giving you [intelligent, performant change detection](http://blog.thoughtram.io/angular/2016/02/22/angular-2-change-detection-explained.html#smarter-change-detection)
+throughout your application.
 
-http://plnkr.co/edit/Hb4pJP3jGtOp6b7JubzS?p=preview
-
-### Example Application
-
-https://github.com/ngrx/example-app
-
-### Introduction
-- [Comprehensive Introduction to @ngrx/store](https://gist.github.com/btroncone/a6e4347326749f938510)
-- [Reactive Angular 2 with ngrx (video)](https://youtu.be/mhA7zZ23Odw)
-- [@ngrx/store in 10 minutes (video)](https://egghead.io/lessons/angular-2-ngrx-store-in-10-minutes)
 
 ### Installation
-Make sure you have  @angular/core and @ngrx/core installed via npm:
+Install @ngrx/core and @ngrx/store from npm:
 ```bash
-npm install @angular/core @ngrx/core --save
+npm install @ngrx/core @ngrx/store --save
 ```
 
-Install @ngrx/store from npm:
-```bash
-npm install @ngrx/store --save
-```
+Optional packages:
+- [@ngrx/store-devtools](https://github.com/ngrx/store-devtools) instruments your store letting you use a
+[powerful time-travelling debugger](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd?hl=en).
+- [@ngrx/router-store](https://github.com/ngrx/router-store) keeps the state of @angular/router in your store
+- [@ngrx/effects](https://github.com/ngrx/effects) isolates side effects from your UI by expressing side effects as sources of actions
 
-Set up with Angular-CLI and SystemJS.
-Modify system-config.ts:
-```ts
-    /** Map relative paths to URLs. */
-    const map: any = {
-        '@ngrx': 'vendor/@ngrx'
-    };
-    
-    /** User packages configuration. */
-    const packages: any = {
-        '@ngrx/core': {
-            main: 'index.js',
-            format: 'cjs'
-        },
-        '@ngrx/store': {
-            main: 'index.js',
-            format: 'cjs'
-        }
-    };
-```
-Modify angular-cli-build.js by adding this line to vendorNpmFiles:
-```js
-    '@ngrx/**/*.+(js|js.map)'
-```
 
-### Usage
+### Examples
+- [Official @ngrx/example-app](https://github.com/ngrx/example-app) is an officially maintained example application showcasing best practices
+for @ngrx projects, including @ngrx/store and @ngrx/effects
+- [angular-webpack2-starter](https://github.com/qdouble/angular-webpack2-starter) is a complete Webpack 2 starter with built-in support for @ngrx.
+Includes Ahead-of-Time (AOT) compilation, hot module reloading (HMR), devtools, and server-side rendering.
 
-Create a reducer function for each data type you have in your application. The combination of these reducers will make up your application state:
+
+### Introduction
+- [Reactive Angular 2 with ngrx (video)](https://youtu.be/mhA7zZ23Odw)
+- [Comprehensive Introduction to @ngrx/store](https://gist.github.com/btroncone/a6e4347326749f938510)
+- [@ngrx/store in 10 minutes (video)](https://egghead.io/lessons/angular-2-ngrx-store-in-10-minutes)
+- [Build Redux Style Applications with Angular2, RxJS, and ngrx/store (video)](https://egghead.io/courses/building-a-time-machine-with-angular-2-and-rxjs)
+
+
+### Setup
+Create a reducer function for each data type you have in your application. The combination of these reducers will
+make up your application state:
 
 ```ts
 // counter.ts
@@ -85,24 +74,26 @@ export const counterReducer: ActionReducer<number> = (state: number = 0, action:
 }
 ```
 
-In your app's main module, import those reducers and use the `StoreModule.provideStore(reducers, initialState)` function to provide them to Angular's injector:
+In your app's main module, import those reducers and use the `StoreModule.provideStore(reducers)`
+function to provide them to Angular's injector:
 
 ```ts
-import { Store, StoreModule } from '@ngrx/store';
-import { counterReducer } from './counter';
 import { NgModule } from '@angular/core'
+import { StoreModule } from '@ngrx/store';
+import { counterReducer } from './counter';
 
 @NgModule({
   imports: [
     BrowserModule,
-    StoreModule.provideStore({ counter: counterReducer }, { counter: 0 })
+    StoreModule.provideStore({ counter: counterReducer })
   ]
 })
-export class MyAppModule {}
-
+export class AppModule {}
 ```
 
-You can then inject the `Store` service into your components and services. The `store.select` method can be used to obtain the appropriate slice(s) of state from your application store:
+
+You can then inject the `Store` service into your components and services. Use `store.select` to
+_select_ slice(s) of state:
 
 ```ts
 import { Store } from '@ngrx/store';
@@ -118,12 +109,14 @@ interface AppState {
 		<button (click)="increment()">Increment</button>
 		<div>Current Count: {{ counter | async }}</div>
 		<button (click)="decrement()">Decrement</button>
+
+		<button (click)="reset()">Reset Counter</button>
 	`
 })
-class MyApp {
+class MyAppComponent {
 	counter: Observable<number>;
 
-	constructor(public store: Store<AppState>){
+	constructor(private store: Store<AppState>){
 		this.counter = store.select('counter');
 	}
 
@@ -141,28 +134,6 @@ class MyApp {
 }
 ```
 
-### Migrating from Store v1.x
-
-#### Middleware
-The middleware APIs have been removed. There are no plans to reintroduce these APIs and there is not a straightforward upgrade process if you rely on middleware.
-
-Some popular middleware libraries have already been upgraded. If you were using [store-saga](https://github.com/CodeSequence/store-saga), checkout [@ngrx/effects](https://github.com/ngrx/effects). If you were using [ngrx-store-logger](https://github.com/btroncone/ngrx-store-logger), it has been reimplemented as a [meta reducer](https://gist.github.com/btroncone/a6e4347326749f938510#implementing-a-meta-reducer).
-
-#### getState(), getValue(), and value
-The APIs for synchronously pulling the most recent state value out of Store have been removed. Instead, you can _always_ rely on `subscribe()` running synchronously if you _have_ to get the state value:
-
-```ts
-import 'rxjs/add/operator/take';
-
-function getState(store: Store<State>): State {
-	let state: State;
-
-	store.take(1).subscribe(s => state = s);
-
-	return state;
-}
-```
 
 ## Contributing
-
 Please read [contributing guidelines here](https://github.com/ngrx/store/blob/master/CONTRIBUTING.md).

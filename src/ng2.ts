@@ -6,6 +6,8 @@ import { Store } from './store';
 import { State } from './state';
 import { combineReducers } from './utils';
 
+const INITIAL_PROBE_ACTION = '@ngrx/store/probe';
+
 export const INITIAL_REDUCER = new OpaqueToken('Token ngrx/store/reducer');
 export const INITIAL_STATE = new OpaqueToken('Token ngrx/store/initial-state');
 
@@ -21,7 +23,7 @@ export function _initialReducerFactory(reducer) {
 
 export function _initialStateFactory(initialState, reducer) {
   if (!initialState) {
-    return reducer(undefined, { type: Dispatcher.INIT });
+    return reducer(undefined, { type: INITIAL_PROBE_ACTION });
   }
   return initialState;
 }

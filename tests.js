@@ -13,7 +13,6 @@ const runner = new Jasmine();
 global.jasmine = runner.jasmine;
 
 require('zone.js/dist/jasmine-patch.js');
-require('./spec/helpers/test-helper.ts');
 
 const { getTestBed } = require('@angular/core/testing');
 const { ServerTestingModule, platformServerTesting } = require('@angular/platform-server/testing');

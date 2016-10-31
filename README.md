@@ -10,7 +10,7 @@ RxJS powered state management for Angular applications, inspired by Redux
 on top of Angular. Core tenets:
 - State is a single immutable data structure
 - Actions describe state changes
-- Pure functions called reducers take the previous state and the next action to compute the new state
+- Pure functions called reducers take previous slices of state and the next action to compute the new state
 - State accessed with the `Store`, an observable of state and an observer of actions
 
 These core principles enable building components that can use the `OnPush` change detection strategy
@@ -58,6 +58,7 @@ export const DECREMENT = 'DECREMENT';
 export const RESET = 'RESET';
 
 export function counterReducer(state: number = 0, action: Action) {
+export function counterReducer(state: number = 0, action: Action): number {
 	switch (action.type) {
 		case INCREMENT:
 			return state + 1;
@@ -74,7 +75,7 @@ export function counterReducer(state: number = 0, action: Action) {
 }
 ```
 
-In your app's main module, import those reducers and use the `StoreModule.provideStore(reducers)`
+In your app's main module, import those reducers and use the `StoreModule.forRoot(reducers)`
 function to provide them to Angular's injector:
 
 ```ts
@@ -85,7 +86,7 @@ import { counterReducer } from './counter';
 @NgModule({
   imports: [
     BrowserModule,
-    StoreModule.provideStore({ counter: counterReducer })
+    StoreModule.forRoot({ counter: counterReducer })
   ]
 })
 export class AppModule {}

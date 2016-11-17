@@ -23,6 +23,11 @@ export function _initialStateFactory(initialState, reducer) {
   if (!initialState) {
     return reducer(undefined, { type: Dispatcher.INIT });
   }
+  
+  if (typeof initialState === 'function') {
+    return initialState();
+  }
+
   return initialState;
 }
 

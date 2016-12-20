@@ -1,7 +1,7 @@
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 export interface Action {
-  type: string;
+  type?: string;
   payload?: any;
 }
 

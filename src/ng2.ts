@@ -23,6 +23,11 @@ export function _initialStateFactory(initialState, reducer) {
   if (!initialState) {
     return reducer(undefined, { type: Dispatcher.INIT });
   }
+  
+  if (typeof initialState === 'function') {
+    initialState = initialState();
+  }
+  
   return initialState;
 }
 
@@ -41,7 +46,7 @@ export function _reducerFactory(dispatcher, reducer) {
 /**
  * @deprecated, use StoreModule.provideStore instead!
  */
-export function provideStore(_reducer: any, _initialState?: any): any[] {
+export function provideStore(_reducer: any, _initialState?: any | (() => any)): any[] {
   return [
     Dispatcher,
     { provide: Store, useFactory: _storeFactory, deps: [Dispatcher, Reducer, State] },
@@ -57,7 +62,7 @@ export function provideStore(_reducer: any, _initialState?: any): any[] {
 
 @NgModule({})
 export class StoreModule {
-  static provideStore(_reducer: any, _initialState?:any): ModuleWithProviders {
+  static provideStore(_reducer: any, _initialState?: any | (() => any)): ModuleWithProviders {
     return {
       ngModule: StoreModule,
       providers: provideStore(_reducer, _initialState)

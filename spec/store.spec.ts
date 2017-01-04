@@ -19,10 +19,7 @@ interface TodoAppSchema {
   todos: Todo[];
 }
 
-
-
-describe('ngRx Store', () => {
-
+const testFun = (initialValue: any | (() => any)) => () => {
   describe('basic store actions', function() {
 
     let injector: ReflectiveInjector;
@@ -35,8 +32,6 @@ describe('ngRx Store', () => {
         counter2: counterReducer,
         counter3: counterReducer
       });
-
-      const initialValue = { counter1: 0, counter2: 1 };
 
       injector = ReflectiveInjector.resolveAndCreate([
         StoreModule.provideStore(rootReducer, initialValue).providers
@@ -192,4 +187,9 @@ describe('ngRx Store', () => {
       expect(dispatcherSubscription.closed).toBe(false);
     });
   });
-});
+};
+
+const initialValue = { counter1: 0, counter2: 1 };
+describe('ngRx Store with initial value', testFun(initialValue));
+
+describe('ngRx Store with initial function', testFun(() => initialValue));

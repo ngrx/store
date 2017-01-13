@@ -134,7 +134,7 @@ class MyAppComponent {
 }
 ```
 
-Using SystemJS?
+Using SystemJS? Below shows a snippet on how to include and map ngrx with store and the devtools.
 ```js
 // Some code has been removed for this example
 (function (global) {

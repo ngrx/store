@@ -51,13 +51,13 @@ make up your application state:
 
 ```ts
 // counter.ts
-import { ActionReducer, Action } from '@ngrx/store';
+import { Action } from '@ngrx/store';
 
 export const INCREMENT = 'INCREMENT';
 export const DECREMENT = 'DECREMENT';
 export const RESET = 'RESET';
 
-export function counterReducer(state: number = 0, action: Action) {
+export function counterReducer(state = 0, action: Action) {
 	switch (action.type) {
 		case INCREMENT:
 			return state + 1;
@@ -96,8 +96,10 @@ You can then inject the `Store` service into your components and services. Use `
 _select_ slice(s) of state:
 
 ```ts
+import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { INCREMENT, DECREMENT, RESET } from './counter';
+import { Observable } from 'rxjs';
 
 interface AppState {
   counter: number;
@@ -120,15 +122,15 @@ class MyAppComponent {
 		this.counter = store.select('counter');
 	}
 
-	increment(){
+	increment() {
 		this.store.dispatch({ type: INCREMENT });
 	}
 
-	decrement(){
+	decrement() {
 		this.store.dispatch({ type: DECREMENT });
 	}
 
-	reset(){
+	reset() {
 		this.store.dispatch({ type: RESET });
 	}
 }

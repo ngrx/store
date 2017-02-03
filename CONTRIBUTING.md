@@ -3,8 +3,7 @@
 ### Setup
 
 ```
-npm install
-npm run typings
+yarn install
 ```
 
 ### Testing
@@ -18,7 +17,7 @@ npm test
 **Please follow these basic steps to simplify pull request reviews - if you don't you'll probably just be asked to anyway.**
 
 * Please rebase your branch against the current master
-* Run ```npm install``` to make sure your development dependencies are up-to-date
+* Run ```yarn install``` to make sure your development dependencies are up-to-date
 * Please ensure the test suite passes before submitting a PR
 * If you've added new functionality, **please** include tests which validate its behaviour
 * Make reference to possible [issues](https://github.com/ngrx/store/issues) on PR comment

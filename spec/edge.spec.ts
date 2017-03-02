@@ -1,8 +1,7 @@
-import {ReflectiveInjector} from '@angular/core';
-import {Observable} from 'rxjs/Observable';
-import {todos, todoCount} from './fixtures/edge_todos';
-
-import {Store, StoreModule, Dispatcher, State, Action, combineReducers} from '../';
+import { Observable } from 'rxjs/Observable';
+import { todos, todoCount } from './fixtures/edge_todos';
+import { createInjector } from './helpers/injector';
+import { Store, StoreModule } from '../';
 
 
 interface TestAppSchema {
@@ -14,28 +13,20 @@ interface TestAppSchema {
 interface Todo { }
 
 interface TodoAppSchema {
-  visibilityFilter: string;
+  todoCount: number;
   todos: Todo[];
 }
 
 
 
 describe('ngRx Store', () => {
-
-  describe('basic store actions', function() {
-
-    let injector: ReflectiveInjector;
-    let store: Store<TestAppSchema>;
-    let dispatcher: Dispatcher;
+  describe('basic store actions', () => {
+    let store: Store<TodoAppSchema>;
 
     beforeEach(() => {
-
-      injector = ReflectiveInjector.resolveAndCreate([
-        StoreModule.provideStore({ todos, todoCount }).providers
-      ]);
+      const injector = createInjector(StoreModule.forRoot<TodoAppSchema>({ todos, todoCount }));
 
       store = injector.get(Store);
-      dispatcher = injector.get(Dispatcher);
     });
 
     it('should provide an Observable Store', () => {
@@ -43,12 +34,11 @@ describe('ngRx Store', () => {
     });
 
     it('should handle re-entrancy', (done) => {
-
       let todosNextCount = 0;
       let todosCountNextCount = 0;
 
       store.select('todos').subscribe((todos: any[]) => {
-        todosNextCount++
+        todosNextCount++;
         store.dispatch({ type: 'SET_COUNT', payload: todos.length })
       });
 
@@ -65,7 +55,6 @@ describe('ngRx Store', () => {
         expect(todosCountNextCount).toBe(2);
         done();
       }, 10);
-
     });
   });
 });

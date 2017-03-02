@@ -1,34 +1,23 @@
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 import {ReflectiveInjector} from '@angular/core';
-
-import {Dispatcher, State, Reducer, Action, provideStore, StoreModule} from '../';
+import { createInjector } from './helpers/injector';
+import { StoreModule, Store } from '../';
 
 
 describe('ngRx State', () => {
-  const Reducer = { reduce: t => t };
   const initialState = 123;
+  const reducer = jasmine.createSpy('reducer').and.returnValue(initialState);
   let injector: ReflectiveInjector;
-  let state: State<number>;
-  let dispatcher: Dispatcher;
 
   beforeEach(() => {
-    spyOn(Reducer, 'reduce').and.callThrough();
-
-    injector = ReflectiveInjector.resolveAndCreate([
-      StoreModule.provideStore(Reducer.reduce, initialState).providers
-    ]);
-
-    state = injector.get(State);
-    dispatcher = injector.get(Dispatcher);
+    injector = createInjector(StoreModule.forRoot({ key: reducer }, { initialState: { key: initialState } }));
   });
 
   it('should call the reducer to scan over the dispatcher', function() {
+    injector.get(Store);
 
-    state.subscribe();
-
-    expect(Reducer.reduce).toHaveBeenCalledWith(initialState, { type: Dispatcher.INIT });
-
+    expect(reducer).toHaveBeenCalledWith(initialState, { type: '@ngrx/store/init' });
   });
 
 });

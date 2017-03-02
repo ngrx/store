@@ -6,7 +6,8 @@
   "module": "./index.js",
   "scripts": {
     "karma": "karma start --single-run",
-    "test:unit": "npm run karma",
+    "test:unit": "node tests.js",
+    "test:unit:coverage": "nyc npm run test:unit",
     "test:ngc": "ngc -p ./spec/ngc/tsconfig.ngc.json",
     "test": "npm run test:unit && npm run test:ngc",
     "clean:pre": "rimraf release",
@@ -35,42 +36,50 @@
   },
   "homepage": "https://github.com/ngrx/store#readme",
   "peerDependencies": {
-    "@angular/core": "^2.0.0",
-    "rxjs": "^5.0.0-beta.12",
-    "@ngrx/core": "^1.1.0"
+    "@angular/core": "4.0.0-rc.1",
+    "@ngrx/core": "^1.1.0",
+    "rxjs": "^5.0.0"
   },
   "devDependencies": {
-    "@angular/common": "^2.0.0",
-    "@angular/compiler": "^2.0.0",
-    "@angular/compiler-cli": "^0.6.0",
-    "@angular/core": "^2.0.0",
-    "@angular/platform-browser": "^2.0.0",
-    "@angular/platform-browser-dynamic": "^2.0.0",
-    "@angular/platform-server": "^2.0.0",
+    "@angular/common": "4.0.0-rc.1",
+    "@angular/compiler": "4.0.0-rc.1",
+    "@angular/compiler-cli": "4.0.0-rc.1",
+    "@angular/core": "4.0.0-rc.1",
+    "@angular/http": "4.0.0-rc.1",
+    "@angular/platform-browser": "4.0.0-rc.1",
+    "@angular/platform-browser-dynamic": "4.0.0-rc.1",
+    "@angular/platform-server": "4.0.0-rc.1",
     "@ngrx/core": "^1.2.0",
-    "@types/jasmine": "^2.2.33",
-    "@types/node": "^6.0.38",
-    "awesome-typescript-loader": "^2.2.1",
+    "@types/jasmine": "^2.5.42",
+    "@types/node": "^7.0.5",
+    "awesome-typescript-loader": "^3.0.4-rc.2",
     "core-js": "^2.4.1",
     "cpy-cli": "^1.0.1",
-    "istanbul-instrumenter-loader": "^0.2.0",
-    "jasmine": "^2.5.0",
-    "karma": "^1.2.0",
-    "karma-chrome-launcher": "^2.0.0",
-    "karma-coverage": "^1.1.1",
-    "karma-jasmine": "^1.0.2",
-    "karma-mocha-reporter": "^2.1.0",
-    "karma-sourcemap-loader": "^0.3.7",
-    "karma-webpack": "^1.8.0",
+    "istanbul-instrumenter-loader": "^2.0.0",
+    "jasmine": "^2.5.3",
+    "jasmine-marbles": "^0.0.2",
+    "nyc": "^10.1.2",
     "rimraf": "^2.5.4",
-    "rollup": "^0.34.13",
-    "rxjs": "^5.0.0-beta.11",
-    "ts-loader": "^0.8.2",
-    "tslint": "^3.15.1",
-    "tslint-loader": "^2.1.5",
-    "typescript": "^2.0.2",
+    "rollup": "^0.41.4",
+    "rxjs": "^5.1.0",
+    "ts-loader": "^2.0.0",
+    "ts-node": "^2.1.0",
+    "tslint": "^4.4.2",
+    "tslint-loader": "^3.3.0",
+    "typescript": "^2.1.6",
     "uglifyjs": "^2.4.10",
-    "webpack": "^2.1.0-beta.21",
-    "zone.js": "^0.6.17"
+    "webpack": "^2.2.1",
+    "zone.js": "^0.7.6"
+  },
+  "nyc": {
+    "extension": [
+      ".ts"
+    ],
+    "exclude": [
+      "spec/**/*.spec"
+    ],
+    "include": [
+      "src/**/*.ts"
+    ]
   }
 }

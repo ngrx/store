@@ -1,8 +1,10 @@
-import * as __private_export__ from './src/private_export';
-
+export { ActionsSubject } from './src/private_export';
+export { ReducerManager, ReducerObservable } from './src/private_export';
+export { ScannedActionsSubject } from './src/private_export';
+export { State, StateObservable, reduceState } from './src/private_export';
+export { INITIAL_STATE, REDUCER_FACTORY, INITIAL_REDUCERS, STORE_FEATURES } from './src/private_export';
+export { StoreRootModule, StoreFeatureModule } from './src/private_export';
 export { Action, ActionReducer, ActionReducerMap, ActionReducerFactory } from './src/models';
 export { StoreModule } from './src/store_module';
 export { Store } from './src/store';
 export { combineReducers, compose } from './src/utils';
-export { __private_export__ };
-

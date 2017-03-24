@@ -4,7 +4,7 @@ RxJS powered state management for Angular applications, inspired by Redux
 [![Join the chat at https://gitter.im/ngrx/store](https://badges.gitter.im/ngrx/store.svg)](https://gitter.im/ngrx/store?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![CircleCI Status for ngrx/store](https://circleci.com/gh/ngrx/store.svg?style=shield&circle-token=aea1fc73de3419cd926fc95e627e036113646fd8
 )](https://circleci.com/gh/ngrx/store)
-[![npm version](https://badge.fury.io/js/%40ngrx%2Fstore.svg)](https://badge.fury.io/js/%40ngrx%2Fstore)
+[![npm version](https://badge.fury.io/js/%40ngrx%2Fstore.svg)](https://www.npmjs.com/package/@ngrx/store)
 
 @ngrx/store is a controlled state container designed to help write performant, consistent applications
 on top of Angular. Core tenets:

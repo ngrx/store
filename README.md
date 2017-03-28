@@ -80,12 +80,13 @@ function to provide them to Angular's injector:
 ```ts
 import { NgModule } from '@angular/core'
 import { StoreModule } from '@ngrx/store';
+import { Observable } from "rxjs";
 import { counterReducer } from './counter';
 
 @NgModule({
   imports: [
     BrowserModule,
-    StoreModule.forRoot({ counter: counterReducer })
+    StoreModule.provideStore({ counter: counterReducer })
   ]
 })
 export class AppModule {}

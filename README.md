@@ -51,7 +51,7 @@ make up your application state:
 
 ```ts
 // counter.ts
-import { ActionReducer, Action } from '@ngrx/store';
+import { Action } from '@ngrx/store';
 
 export const INCREMENT = 'INCREMENT';
 export const DECREMENT = 'DECREMENT';
@@ -74,7 +74,7 @@ export function counterReducer(state: number = 0, action: Action): number {
 }
 ```
 
-In your app's main module, import those reducers and use the `StoreModule.forRoot(reducers)`
+In your app's main module, import those reducers and use the `StoreModule.provideStore(reducers)`
 function to provide them to Angular's injector:
 
 ```ts
@@ -85,7 +85,7 @@ import { counterReducer } from './counter';
 @NgModule({
   imports: [
     BrowserModule,
-    StoreModule.forRoot({ counter: counterReducer })
+    StoreModule.provideStore({ counter: counterReducer })
   ]
 })
 export class AppModule {}

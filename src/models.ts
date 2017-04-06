@@ -1,5 +1,6 @@
-export interface Action {
+export interface Action<T = any> {
   readonly type: string;
+  readonly payload?: T;
 }
 
 export interface ActionReducer<T, V extends Action> {

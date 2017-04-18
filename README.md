@@ -85,7 +85,7 @@ import { counterReducer } from './counter';
 @NgModule({
   imports: [
     BrowserModule,
-    StoreModule.forRoot({ counter: counterReducer })
+    StoreModule.provideStore({ counter: counterReducer })
   ]
 })
 export class AppModule {}

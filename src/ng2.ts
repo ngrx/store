@@ -57,7 +57,7 @@ export function provideStore(_reducer: any, _initialState?: any): any[] {
 
 @NgModule({})
 export class StoreModule {
-  static provideStore(_reducer: any, _initialState?:any): ModuleWithProviders {
+  static provideStore(_reducer: any, _initialState?: any): ModuleWithProviders {
     return {
       ngModule: StoreModule,
       providers: provideStore(_reducer, _initialState)

@@ -80,6 +80,7 @@ function to provide them to Angular's injector:
 ```ts
 import { NgModule } from '@angular/core'
 import { StoreModule } from '@ngrx/store';
+import { Observable } from "rxjs";
 import { counterReducer } from './counter';
 
 @NgModule({

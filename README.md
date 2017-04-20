@@ -134,6 +134,44 @@ class MyAppComponent {
 }
 ```
 
+Using SystemJS? Below shows a snippet on how to include and map ngrx with store and the devtools.
+```js
+// Some code has been removed for this example
+(function (global) {
+    System.config({
+        paths: {
+            'npm:': 'node_modules/'
+        },
+      map: {
+            // our app is within the app folder
+            app: 'app',
+            // angular bundles
+            '@angular/core': 'npm:@angular/core/bundles/core.umd.js',
+            '@ngrx': 'npm:@ngrx',
+        },
+        packages: {
+            app: {
+                main: './main.js',
+                defaultExtension: 'js'
+            },
+            '@ngrx/core': {
+            main: 'bundles/core.umd.js',
+            format: 'cjs'
+            },
+            '@ngrx/store': {
+                   main: 'bundles/store.umd.js',
+                   format: 'cjs'
+            },
+            '@ngrx/store-devtools': {
+                   main: 'bundles/store-devtools.umd.js',
+                   format: 'cjs'
+            }
+        }
+
+    });
+})(this);
+```
+
 
 ## Contributing
 Please read [contributing guidelines here](https://github.com/ngrx/store/blob/master/CONTRIBUTING.md).

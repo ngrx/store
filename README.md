@@ -51,7 +51,7 @@ make up your application state:
 
 ```ts
 // counter.ts
-import { ActionReducer, Action } from '@ngrx/store';
+import { Action } from '@ngrx/store';
 
 export const INCREMENT = 'INCREMENT';
 export const DECREMENT = 'DECREMENT';

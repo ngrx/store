@@ -1,4 +1,5 @@
 var path = require('path');
+var webpack = require('webpack');
 
 module.exports = function(karma) {
   'use strict';
@@ -29,6 +30,10 @@ module.exports = function(karma) {
       ]
     },
 
+    mime: {
+      'text/x-typescript': ['ts', 'tsx']
+    },
+
     browsers: ['Chrome'],
 
     port: 9018,
@@ -41,29 +46,26 @@ module.exports = function(karma) {
     webpack: {
       devtool: 'inline-source-map',
       resolve: {
-        root: __dirname,
-        extensions: ['', '.ts', '.js']
+        extensions: ['.ts', '.js']
       },
       module: {
-        preLoaders: [
+        loaders: [
           {
+            enforce: 'pre',
             test: /\.ts$/,
             loader: 'tslint-loader',
             exclude: [
               /node_modules/
             ]
-          }
-        ],
-        loaders: [
+          },
           {
             test: /\.ts?$/,
             exclude: /(node_modules)/,
-            loader: 'ts'
-          }
-        ],
-        postLoaders: [
+            loader: 'awesome-typescript-loader'
+          },
           {
-            test: /\.(js|ts)$/, loader: 'istanbul-instrumenter',
+            enforce: 'post',
+            test: /\.(js|ts)$/, loader: 'istanbul-instrumenter-loader',
             include: path.resolve(__dirname, 'src'),
             exclude: [
               /\.(e2e|spec|bundle)\.ts$/,
@@ -72,11 +74,23 @@ module.exports = function(karma) {
           }
         ]
       },
-      tslint: {
-        emitErrors: false,
-        failOnHint: false,
-        resourcePath: 'src'
-      }
+      plugins: [
+        new webpack.LoaderOptionsPlugin({
+          options: {
+            tslint: {
+              emitErrors: false,
+              failOnHint: false,
+              resourcePath: 'src'
+            }
+          }
+        }),
+        new webpack.ContextReplacementPlugin(
+          // The (\\|\/) piece accounts for path separators in *nix and Windows
+          /angular(\\|\/)core(\\|\/)(esm(\\|\/)src|src)(\\|\/)linker/,
+          path.resolve('src'),
+          {}
+        )
+      ]
     }
   });
 };

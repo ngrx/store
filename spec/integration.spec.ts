@@ -1,11 +1,10 @@
+import {Observable} from 'rxjs/Observable';
+import {ReflectiveInjector} from '@angular/core';
 import 'rxjs/add/observable/combineLatest';
-import 'rxjs/add/operator/first';
-import { Observable } from 'rxjs/Observable';
-import { TestBed } from '@angular/core/testing';
-import { Store, StoreModule, Action, combineReducers } from '../';
-import { ReducerManager, INITIAL_STATE, State } from '../src/private_export';
-import { counterReducer, INCREMENT, DECREMENT, RESET } from './fixtures/counter';
-import { todos, visibilityFilter, VisibilityFilters, SET_VISIBILITY_FILTER, ADD_TODO, COMPLETE_TODO, COMPLETE_ALL_TODOS } from './fixtures/todos';
+
+import {Store, StoreModule, Action, combineReducers, INITIAL_REDUCER, INITIAL_STATE} from '../';
+import {counterReducer, INCREMENT, DECREMENT, RESET} from './fixtures/counter';
+import {todos, visibilityFilter, VisibilityFilters, SET_VISIBILITY_FILTER, ADD_TODO, COMPLETE_TODO, COMPLETE_ALL_TODOS} from './fixtures/todos';
 
 interface Todo {
   id: number;
@@ -21,23 +20,22 @@ interface TodoAppSchema {
 describe('ngRx Integration spec', () => {
 
   describe('todo integration spec', function() {
+
+    let injector: ReflectiveInjector;
     let store: Store<TodoAppSchema>;
-    let state: State<TodoAppSchema>;
+    let currentState: TodoAppSchema;
 
-    const initialState = { todos: [], visibilityFilter: VisibilityFilters.SHOW_ALL };
-    const reducers = { todos, visibilityFilter };
+    const rootReducer = combineReducers({ todos, visibilityFilter });
+    const initialValue = { todos: [], visibilityFilter: VisibilityFilters.SHOW_ALL };
 
-    beforeEach(() => {
-      spyOn(reducers, 'todos').and.callThrough();
+    injector = ReflectiveInjector.resolveAndCreate([
+      StoreModule.provideStore(rootReducer, initialValue).providers
+    ]);
 
-      TestBed.configureTestingModule({
-        imports: [
-          StoreModule.forRoot(reducers, { initialState }),
-        ]
-      });
+    store = injector.get(Store);
 
-      store = TestBed.get(Store);
-      state = TestBed.get(State);
+    store.subscribe(state => {
+      currentState = state;
     });
 
     it('should successfully instantiate', () => {
@@ -45,58 +43,66 @@ describe('ngRx Integration spec', () => {
     });
 
     it('should combine reducers automatically if a key/value map is provided', () => {
+      const reducers = { test: function(){} };
+      spyOn(reducers, 'test');
       const action = { type: 'Test Action' };
-      const reducer$: ReducerManager = TestBed.get(ReducerManager);
+      const reducer = ReflectiveInjector.resolveAndCreate([ StoreModule.provideStore(reducers).providers ]).get(INITIAL_REDUCER);
 
-      reducer$.first().subscribe(reducer => {
-        expect(reducer).toBeDefined();
-        expect(typeof reducer === 'function').toBe(true);
+      expect(reducer).toBeDefined();
+      expect(typeof reducer === 'function').toBe(true);
 
-        reducer({ todos: [] }, action);
+      reducer(undefined, action);
 
-        expect(reducers.todos).toHaveBeenCalledWith([], action);
-      });
+      expect(reducers.test).toHaveBeenCalledWith(undefined, action);
+    });
+
+    it('should probe the reducer to resolve the initial state if no initial state is provided', () => {
+      const reducer = () => 2;
+      const initialState = ReflectiveInjector.resolveAndCreate([ StoreModule.provideStore(reducer).providers ]).get(INITIAL_STATE);
+
+      expect(initialState).toBe(2);
     });
 
     it('should use a provided initial state', () => {
-      const resolvedInitialState = TestBed.get(INITIAL_STATE);
+      const reducer = () => 2;
+      const initialState = ReflectiveInjector.resolveAndCreate([ StoreModule.provideStore(reducer, 3).providers ]).get(INITIAL_STATE);
 
-      expect(resolvedInitialState).toEqual(initialState);
+      expect(initialState).toBe(3);
     });
 
     it('should start with no todos and showing all filter', () => {
-      expect(state.value.todos.length).toEqual(0);
-      expect(state.value.visibilityFilter).toEqual(VisibilityFilters.SHOW_ALL);
+      expect(currentState.todos.length).toEqual(0);
+      expect(currentState.visibilityFilter).toEqual(VisibilityFilters.SHOW_ALL);
     });
 
     it('should add a todo', () => {
       store.dispatch({ type: ADD_TODO, payload: { text: 'first todo' } });
+      expect(currentState.todos.length).toEqual(1);
 
-      expect(state.value.todos.length).toEqual(1);
-      expect(state.value.todos[0].text).toEqual('first todo');
-      expect(state.value.todos[0].completed).toEqual(false);
+      expect(currentState.todos[0].text).toEqual('first todo');
+      expect(currentState.todos[0].completed).toEqual(false);
+      expect(currentState.todos[0].id).toEqual(1);
     });
 
     it('should add another todo', () => {
-      store.dispatch({ type: ADD_TODO, payload: { text: 'first todo' } });
       store.dispatch({ type: ADD_TODO, payload: { text: 'second todo' } });
+      expect(currentState.todos.length).toEqual(2);
 
-      expect(state.value.todos.length).toEqual(2);
-      expect(state.value.todos[1].text).toEqual('second todo');
-      expect(state.value.todos[1].completed).toEqual(false);
+      expect(currentState.todos[1].text).toEqual('second todo');
+      expect(currentState.todos[1].completed).toEqual(false);
+      expect(currentState.todos[1].id).toEqual(2);
     });
 
     it('should complete the first todo', () => {
-      store.dispatch({ type: ADD_TODO, payload: { text: 'first todo' } });
-      store.dispatch({ type: COMPLETE_TODO, payload: { id: state.value.todos[0].id } });
+      store.dispatch({ type: COMPLETE_TODO, payload: { id: 1 } });
+      expect(currentState.todos.length).toEqual(2);
 
-      expect(state.value.todos[0].completed).toEqual(true);
+      expect(currentState.todos[0].text).toEqual('first todo');
+      expect(currentState.todos[0].completed).toEqual(true);
+      expect(currentState.todos[0].id).toEqual(1);
     });
 
     it('should use visibilityFilter to filter todos', () => {
-      store.dispatch({ type: ADD_TODO, payload: { text: 'first todo' } });
-      store.dispatch({ type: ADD_TODO, payload: { text: 'second todo' } });
-      store.dispatch({ type: COMPLETE_TODO, payload: { id: state.value.todos[0].id } });
 
       const filterVisibleTodos = (visibilityFilter, todos) => {
         let predicate;

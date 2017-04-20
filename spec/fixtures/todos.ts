@@ -1,9 +1,3 @@
-export interface TodoItem {
-  id: number;
-  completed: boolean;
-  text: string;
-}
-
 export const ADD_TODO = 'ADD_TODO';
 export const COMPLETE_TODO = 'COMPLETE_TODO';
 export const SET_VISIBILITY_FILTER = 'SET_VISIBILITY_FILTER';
@@ -26,7 +20,7 @@ export function visibilityFilter(state = VisibilityFilters.SHOW_ALL, {type, payl
   }
 };
 
-export function todos(state: TodoItem[] = [], {type, payload}): TodoItem[] {
+export function todos(state = [], {type, payload}) {
   switch (type) {
     case ADD_TODO:
       return [
@@ -38,11 +32,11 @@ export function todos(state: TodoItem[] = [], {type, payload}): TodoItem[] {
         }
       ];
     case COMPLETE_ALL_TODOS:
-      return state.map(todo => ({ ...todo, completed: true }));
+      return state.map(todo => Object.assign({}, todo, {completed: true}));
     case COMPLETE_TODO:
-      return state.map(todo =>
-        todo.id === payload.id ? { ...todo, completed: true } : todo
-      );
+      return state.map(todo => {
+        return todo.id === payload.id ? Object.assign({}, todo, {completed: true}) : todo;
+      });
     default:
       return state;
   }

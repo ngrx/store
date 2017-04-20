@@ -1,12 +1,10 @@
 import 'rxjs/add/operator/take';
-import { Observable } from 'rxjs/Observable';
-import { ReflectiveInjector } from '@angular/core';
-import { hot } from 'jasmine-marbles';
-import { createInjector } from './helpers/injector';
-import {Store, Action, combineReducers, StoreModule} from '../';
-import { ActionsSubject } from '../src/private_export';
-import {counterReducer, INCREMENT, DECREMENT, RESET} from './fixtures/counter';
+import {Observable} from 'rxjs/Observable';
+import {ReflectiveInjector} from '@angular/core';
+import { hot, expectObservable } from './helpers/marble-testing';
 
+import {Store, Dispatcher, State, Action, combineReducers, StoreModule} from '../';
+import {counterReducer, INCREMENT, DECREMENT, RESET} from './fixtures/counter';
 
 interface TestAppSchema {
   counter1: number;
@@ -29,22 +27,23 @@ describe('ngRx Store', () => {
 
     let injector: ReflectiveInjector;
     let store: Store<TestAppSchema>;
-    let dispatcher: ActionsSubject;
-    let initialState: any;
+    let dispatcher: Dispatcher;
 
     beforeEach(() => {
-      const reducers = {
+      const rootReducer = combineReducers({
         counter1: counterReducer,
         counter2: counterReducer,
         counter3: counterReducer
-      };
+      });
 
-      initialState = { counter1: 0, counter2: 1 };
+      const initialValue = { counter1: 0, counter2: 1 };
 
-      injector = createInjector(StoreModule.forRoot(reducers, { initialState }));
+      injector = ReflectiveInjector.resolveAndCreate([
+        StoreModule.provideStore(rootReducer, initialValue).providers
+      ]);
 
       store = injector.get(Store);
-      dispatcher = injector.get(ActionsSubject);
+      dispatcher = injector.get(Dispatcher);
     });
 
     it('should provide an Observable Store', () => {
@@ -60,39 +59,26 @@ describe('ngRx Store', () => {
       e: { type: INCREMENT }
     };
 
-    it('should let you select state with a key name', function() {
+    it('should let you select state with a key name or selector function', function() {
 
       const counterSteps = hot(actionSequence, actionValues);
 
       counterSteps.subscribe((action) => store.dispatch(action));
 
       const counterStateWithString = store.select('counter1');
-
-      const stateSequence = 'i-v--w--x--y--z';
-      const counter1Values = { i: 0, v: 1, w: 2, x: 1, y: 0, z: 1 };
-
-      expect(counterStateWithString).toBeObservable(hot(stateSequence, counter1Values));
-
-    });
-
-    it('should let you select state with a selector function', function() {
-
-      const counterSteps = hot(actionSequence, actionValues);
-
-      counterSteps.subscribe((action) => store.dispatch(action));
-
       const counterStateWithFunc = store.select(s => s.counter1);
 
       const stateSequence = 'i-v--w--x--y--z';
       const counter1Values = { i: 0, v: 1, w: 2, x: 1, y: 0, z: 1 };
 
-      expect(counterStateWithFunc).toBeObservable(hot(stateSequence, counter1Values));
+      expectObservable(counterStateWithString).toBe(stateSequence, counter1Values);
+      expectObservable(counterStateWithFunc).toBe(stateSequence, counter1Values);
 
     });
 
     it('should correctly lift itself', function() {
 
-      const result = store.select('counter1');
+      const result = store.select('t');
 
       expect(result instanceof Store).toBe(true);
 
@@ -121,7 +107,7 @@ describe('ngRx Store', () => {
       const stateSequence = 'i-v--w--x--y--z';
       const counter1Values = { i: 0, v: 1, w: 2, x: 1, y: 0, z: 1 };
 
-      expect(counterState).toBeObservable(hot(stateSequence, counter1Values));
+      expectObservable(counterState).toBe(stateSequence, counter1Values);
 
     });
 
@@ -129,14 +115,15 @@ describe('ngRx Store', () => {
 
       const counterSteps = hot(actionSequence, actionValues);
 
-      counterSteps.subscribe((action) => dispatcher.next(action));
+      counterSteps.subscribe((action) => dispatcher.dispatch(action));
 
       const counterState = store.select('counter1');
 
       const stateSequence = 'i-v--w--x--y--z';
       const counter1Values = { i: 0, v: 1, w: 2, x: 1, y: 0, z: 1 };
 
-      expect(counterState).toBeObservable(hot(stateSequence, counter1Values));
+      expectObservable(counterState).toBe(stateSequence, counter1Values);
+
     });
 
 
@@ -150,9 +137,33 @@ describe('ngRx Store', () => {
       const counter2State = store.select('counter2');
 
       const stateSequence = 'i-v--w--x--y--z';
+      const counter1Values = { i: 0, v: 1, w: 2, x: 1, y: 0, z: 1 };
       const counter2Values = { i: 1, v: 2, w: 3, x: 2, y: 0, z: 1 };
 
-      expect(counter2State).toBeObservable(hot(stateSequence, counter2Values));
+      expectObservable(counter1State).toBe(stateSequence, counter1Values);
+      expectObservable(counter2State).toBe(stateSequence, counter2Values);
+
+    });
+
+    it('should allow you to add a reducer later', function() {
+
+      let currentState;
+
+      store.subscribe(state => {
+        currentState = state;
+      });
+
+      expect(currentState).toEqual({counter1: 0, counter2: 1, counter3: 0});
+      store.dispatch({type: INCREMENT});
+      expect(currentState).toEqual({counter1: 1, counter2: 2, counter3: 1});
+
+      store.replaceReducer(combineReducers({ counter1: counterReducer, dynamicCounter: counterReducer}));
+
+      expect(currentState).toEqual({ counter1: 1, dynamicCounter: 0 });
+
+      store.dispatch({type: INCREMENT});
+
+      expect(currentState).toEqual({ counter1: 2, dynamicCounter: 1 });
 
     });
 
@@ -179,16 +190,6 @@ describe('ngRx Store', () => {
 
       expect(storeSubscription.closed).toBe(false);
       expect(dispatcherSubscription.closed).toBe(false);
-    });
-
-    it('should complete if the dispatcher is destroyed', () => {
-      const storeSubscription = store.subscribe();
-      const dispatcherSubscription = dispatcher.subscribe();
-
-      dispatcher.ngOnDestroy();
-
-      expect(storeSubscription.closed).toBe(true);
-      expect(dispatcherSubscription.closed).toBe(true);
     });
   });
 });

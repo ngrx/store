@@ -117,7 +117,7 @@ class MyAppComponent {
 	counter: Observable<number>;
 
 	constructor(private store: Store<AppState>){
-		this.counter = store.select('counter');
+		this.counter = store.select<number>('counter');
 	}
 
 	increment(){

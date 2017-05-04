@@ -31,6 +31,10 @@ export class Store<T> extends Observable<T> implements Observer<Action> {
   replaceReducer(reducer: ActionReducer<any>) {
     this._reducer.next(reducer);
   }
+  
+  toJSON() {
+    return this.getState();
+  }
 
   dispatch(action: Action) {
     this._dispatcher.next(action);

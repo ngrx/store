@@ -11,7 +11,7 @@ export const VisibilityFilters = {
   SHOW_ACTIVE: 'SHOW_ACTIVE'
 };
 
-export function visibilityFilter(state = VisibilityFilters.SHOW_ALL, {type, payload}) {
+export function visibilityFilter(state = VisibilityFilters.SHOW_ALL, {type, payload}: {type: string, payload: any}) {
   switch (type) {
     case SET_VISIBILITY_FILTER:
       return payload;
@@ -20,7 +20,7 @@ export function visibilityFilter(state = VisibilityFilters.SHOW_ALL, {type, payl
   }
 };
 
-export function todos(state = [], {type, payload}) {
+export function todos(state: any[] = [], {type, payload}: {type: string, payload: any}) {
   switch (type) {
     case ADD_TODO:
       return [

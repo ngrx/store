@@ -2,7 +2,7 @@ import {ActionReducer} from './reducer';
 
 export function combineReducers(reducers: any): ActionReducer<any> {
   const reducerKeys = Object.keys(reducers);
-  const finalReducers = {};
+  const finalReducers: { [key: string]: Function } = {};
 
   for (let i = 0; i < reducerKeys.length; i++) {
     const key = reducerKeys[i];
@@ -15,7 +15,7 @@ export function combineReducers(reducers: any): ActionReducer<any> {
 
   return function combination(state = {}, action) {
     let hasChanged = false;
-    const nextState = {};
+    const nextState: { [key: string]: any } = {};
     for (let i = 0; i < finalReducerKeys.length; i++) {
       const key = finalReducerKeys[i];
       const reducer = finalReducers[key];

@@ -26,7 +26,7 @@ describe('ngRx Integration spec', () => {
     let currentState: TodoAppSchema;
 
     const rootReducer = combineReducers({ todos, visibilityFilter });
-    const initialValue = { todos: [], visibilityFilter: VisibilityFilters.SHOW_ALL };
+    const initialValue = { todos: (<any[]> []), visibilityFilter: VisibilityFilters.SHOW_ALL };
 
     injector = ReflectiveInjector.resolveAndCreate([
       StoreModule.provideStore(rootReducer, initialValue).providers
@@ -104,21 +104,21 @@ describe('ngRx Integration spec', () => {
 
     it('should use visibilityFilter to filter todos', () => {
 
-      const filterVisibleTodos = (visibilityFilter, todos) => {
+      const filterVisibleTodos = (visibilityFilter: any, todos: any) => {
         let predicate;
         if (visibilityFilter === VisibilityFilters.SHOW_ALL) {
           predicate = () => true;
         }
         else if (visibilityFilter === VisibilityFilters.SHOW_ACTIVE) {
-          predicate = (todo) => !todo.completed;
+          predicate = (todo: any) => !todo.completed;
         }
         else {
-          predicate = (todo) => todo.completed;
+          predicate = (todo: any) => todo.completed;
         }
         return todos.filter(predicate);
       };
 
-      let currentlyVisibleTodos;
+      let currentlyVisibleTodos: any[] = [];
 
       Observable.combineLatest(store.select('visibilityFilter'), store.select('todos'), filterVisibleTodos)
         .subscribe(visibleTodos => {

@@ -1,4 +1,4 @@
-const todo = (state, action) => {
+const todo = (state: any, action: any) => {
   switch (action.type) {
     case 'ADD_TODO':
       return {
@@ -20,7 +20,7 @@ const todo = (state, action) => {
   }
 }
 
-export const todos = (state = [], action) => {
+export const todos = (state: any[] = [], action: any) => {
   switch (action.type) {
     case 'ADD_TODO':
       return [
@@ -36,7 +36,7 @@ export const todos = (state = [], action) => {
   }
 }
 
-export const todoCount = (state = 0, action) => {
+export const todoCount = (state = 0, action: any) => {
   switch(action.type){
     case 'SET_COUNT':
       return action.payload;

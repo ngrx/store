@@ -1,4 +1,9 @@
-# @ngrx/store
+---
+# This repository is for version 2.x of of @ngrx/store.
+# [Click here for the latest version (4.x)](https://github.com/ngrx/platform)
+---
+
+## @ngrx/store
 RxJS powered state management for Angular applications, inspired by Redux
 
 [![Join the chat at https://gitter.im/ngrx/store](https://badges.gitter.im/ngrx/store.svg)](https://gitter.im/ngrx/store?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
@@ -21,7 +26,7 @@ throughout your application.
 ### Installation
 Install @ngrx/core and @ngrx/store from npm:
 ```bash
-npm install @ngrx/core @ngrx/store --save
+npm install @ngrx/core @ngrx/store@2.2.3 --save
 ```
 
 Optional packages:

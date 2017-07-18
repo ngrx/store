@@ -1,10 +1,10 @@
-# @ngrx/store
-RxJS powered state management for Angular applications, inspired by Redux
+---
+# This repository is for version 2.x of of @ngrx/store.
+# [Click here for the latest version (4.x)](https://github.com/ngrx/platform)
+---
 
----
-#### This repository is for version 2.x of of @ngrx/store.
-#### [Click here for the latest version (4.x)](https://github.com/ngrx/platform)
----
+## @ngrx/store
+RxJS powered state management for Angular applications, inspired by Redux
 
 [![Join the chat at https://gitter.im/ngrx/store](https://badges.gitter.im/ngrx/store.svg)](https://gitter.im/ngrx/store?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![CircleCI Status for ngrx/store](https://circleci.com/gh/ngrx/store.svg?style=shield&circle-token=aea1fc73de3419cd926fc95e627e036113646fd8

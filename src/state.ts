@@ -13,10 +13,10 @@ export class State<T> extends BehaviorSubject<T> {
 
     const actionInQueue$ = observeOn.call(action$, queue);
     const actionAndReducer$ = withLatestFrom.call(actionInQueue$, reducer$);
-    const state$ = scan.call(actionAndReducer$, (state, [ action, reducer ]) => {
+    const state$ = scan.call(actionAndReducer$, (state: any, [ action, reducer ]: [any, any]) => {
       return reducer(state, action);
     }, _initialState);
 
-    state$.subscribe(value => this.next(value));
+    state$.subscribe((value: any) => this.next(value));
   }
 }

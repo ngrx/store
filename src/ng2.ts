@@ -1,7 +1,9 @@
 import { OpaqueToken, NgModule, ModuleWithProviders } from '@angular/core';
+import { Observer } from 'rxjs/Observer';
+import { Observable } from 'rxjs/Observable';
 
-import { Reducer } from './reducer';
-import { Dispatcher } from './dispatcher';
+import { ActionReducer, Reducer } from './reducer';
+import { Action, Dispatcher } from './dispatcher';
 import { Store } from './store';
 import { State } from './state';
 import { combineReducers } from './utils';
@@ -12,21 +14,21 @@ export const INITIAL_STATE = new OpaqueToken('Token ngrx/store/initial-state');
 export const _INITIAL_REDUCER = new OpaqueToken('Token _ngrx/store/reducer');
 export const _INITIAL_STATE = new OpaqueToken('Token _ngrx/store/initial-state');
 
-export function _initialReducerFactory(reducer) {
+export function _initialReducerFactory(reducer: any) {
   if (typeof reducer === 'function') {
     return reducer;
   }
   return combineReducers(reducer);
 }
 
-export function _initialStateFactory(initialState, reducer) {
+export function _initialStateFactory(initialState: any, reducer: Function) {
   if (!initialState) {
     return reducer(undefined, { type: Dispatcher.INIT });
   }
   return initialState;
 }
 
-export function _storeFactory(dispatcher, reducer, state$) {
+export function _storeFactory(dispatcher: Observer<Action>, reducer: Observer<ActionReducer<any>>, state$: Observable<any>) {
   return new Store(dispatcher, reducer, state$);
 }
 
@@ -34,7 +36,7 @@ export function _stateFactory(initialState: any, dispatcher: Dispatcher, reducer
   return new State(initialState, dispatcher, reducer);
 }
 
-export function _reducerFactory(dispatcher, reducer) {
+export function _reducerFactory(dispatcher: Dispatcher, reducer: ActionReducer<any>) {
   return new Reducer(dispatcher, reducer);
 };
 

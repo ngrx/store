@@ -7,6 +7,7 @@
     "experimentalDecorators": true,
     "module": "commonjs",
     "moduleResolution": "node",
+    "noImplicitAny": true,
     "noEmitOnError": false,
     "outDir": "./release",
     "rootDir": ".",
@@ -19,7 +20,7 @@
     ]
   },
   "exclude": [
-	  "node_modules"
+    "node_modules"
   ],
   "angularCompilerOptions": {
     "strictMetadataEmit": true

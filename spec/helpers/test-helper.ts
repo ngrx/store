@@ -1,4 +1,4 @@
-declare var global, require, Symbol;
+declare var global: any, require: Function, Symbol: any;
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 5000;
 
@@ -18,7 +18,7 @@ const assertDeepEqual = marbleHelpers.assertDeepEqual;
 
 const glit = global.it;
 
-global.it = function(description, cb, timeout) {
+global.it = function(description: any, cb: any, timeout: any) {
   if (cb.length === 0) {
     glit(description, function() {
       global.rxTestScheduler = new TestScheduler(assertDeepEqual);
@@ -36,7 +36,7 @@ global.it.asDiagram = function() {
 
 const glfit = global.fit;
 
-global.fit = function(description, cb, timeout) {
+global.fit = function(description: any, cb: any, timeout: any) {
   if (cb.length === 0) {
     glfit(description, function() {
       global.rxTestScheduler = new TestScheduler(assertDeepEqual);
@@ -48,7 +48,7 @@ global.fit = function(description, cb, timeout) {
   }
 };
 
-function stringify(x) {
+function stringify(x: any): string {
   return JSON.stringify(x, function(key, value) {
     if (Array.isArray(value)) {
       return '[' + value
@@ -67,7 +67,7 @@ beforeEach(function() {
   jasmine.addMatchers({
     toDeepEqual: function(util, customEqualityTesters) {
       return {
-        compare: function(actual, expected) {
+        compare: function(actual: any, expected: any) {
           let result: any = { pass: _.isEqual(actual, expected) };
 
           if (!result.pass && Array.isArray(actual) && Array.isArray(expected)) {
@@ -95,7 +95,7 @@ afterEach(function() {
 (function() {
   Object.defineProperty(Error.prototype, 'toJSON', {
     value: function() {
-      let alt = {};
+      let alt: { [key: string]: any } = {};
 
       Object.getOwnPropertyNames(this).forEach(function(key) {
         if (key !== 'stack') {
@@ -113,9 +113,9 @@ afterEach(function() {
 global.lowerCaseO = function lowerCaseO() {
   const values = [].slice.apply(arguments);
 
-  const o = {
-    subscribe: function(observer) {
-      values.forEach(function(v) {
+  const o: { [key: string]: any } = {
+    subscribe: function(observer: any) {
+      values.forEach(function(v: any) {
         observer.next(v);
       });
       observer.complete();

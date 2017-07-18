@@ -6,7 +6,7 @@ import {Dispatcher, State, Reducer, Action, provideStore, StoreModule} from '../
 
 
 describe('ngRx State', () => {
-  const Reducer = { reduce: t => t };
+  const Reducer = { reduce: (t: any) => t };
   const initialState = 123;
   let injector: ReflectiveInjector;
   let state: State<number>;

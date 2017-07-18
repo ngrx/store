@@ -63,7 +63,7 @@ describe('ngRx Store', () => {
 
       const counterSteps = hot(actionSequence, actionValues);
 
-      counterSteps.subscribe((action) => store.dispatch(action));
+      counterSteps.subscribe((action: any) => store.dispatch(action));
 
       const counterStateWithString = store.select('counter1');
       const counterStateWithFunc = store.select(s => s.counter1);
@@ -100,7 +100,7 @@ describe('ngRx Store', () => {
 
       const counterSteps = hot(actionSequence, actionValues);
 
-      counterSteps.subscribe((action) => store.dispatch(action));
+      counterSteps.subscribe((action: any) => store.dispatch(action));
 
       const counterState = store.select('counter1');
 
@@ -115,7 +115,7 @@ describe('ngRx Store', () => {
 
       const counterSteps = hot(actionSequence, actionValues);
 
-      counterSteps.subscribe((action) => dispatcher.dispatch(action));
+      counterSteps.subscribe((action: any) => dispatcher.dispatch(action));
 
       const counterState = store.select('counter1');
 
@@ -131,7 +131,7 @@ describe('ngRx Store', () => {
 
       const counterSteps = hot(actionSequence, actionValues);
 
-      counterSteps.subscribe((action) => store.dispatch(action));
+      counterSteps.subscribe((action: any) => store.dispatch(action));
 
       const counter1State = store.select('counter1');
       const counter2State = store.select('counter2');

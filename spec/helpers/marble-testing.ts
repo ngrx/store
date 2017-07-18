@@ -1,4 +1,4 @@
-declare var global;
+declare var global: any;
 
 function hot(...args: any[]) {
   if (!global.rxTestScheduler) {
@@ -28,7 +28,7 @@ function expectSubscriptions(...args: any[]) {
   return global.rxTestScheduler.expectSubscriptions.apply(global.rxTestScheduler, arguments);
 }
 
-function assertDeepEqual(actual, expected) {
+function assertDeepEqual(actual: any, expected: any) {
   (<any> expect(actual)).toDeepEqual(expected);
 }
 

@@ -12,6 +12,6 @@ export default {
     'rxjs/scheduler/queue': 'Rx.Scheduler',
     'rxjs/operator/observeOn': 'Rx.Observable.prototype',
     'rxjs/operator/scan': 'Rx.Observable.prototype',
-    'rxjs/operator/withLatestFrom': 'Rx.Observable'
+    'rxjs/operator/withLatestFrom': 'Rx.Observable.prototype'
   }
 }

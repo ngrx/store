@@ -139,6 +139,40 @@ class MyAppComponent {
 }
 ```
 
+Using typed actions in conjunction with `switchReduce` allow you to write reducers in a more type safety way.
+
+```ts
+// counter.ts
+import { ActionReducer, TypedAction, switchReduce } from '@ngrx/store';
+
+export class AddAction implements TypedAction<number> {
+  readonly type = 'ADD';
+  constructor(public readonly payload: number) {}
+}
+export class SubtractAction implements TypedAction<number> {
+  readonly type = 'SUBTRACT';
+  constructor(public readonly payload: number) {}
+}
+export class ResetAction implements TypedAction<any> {
+  readonly type = 'RESET';
+  readonly payload: any;
+  constructor() {}
+}
+
+export const counterReducer: ActionReducer<number> =
+  (state: number = 0, action: TypedAction<any>) =>
+    switchReduce(state, action)
+      .byClass(AddAction, (num: number) => {
+        return state + num;
+      })
+      .byClass(SubtractAction, (num: number) => {
+        return state - num;
+      })
+      .byClass(ResetAction, () => {
+        return 0;
+      })
+      .reduce();
+```
 
 ## Contributing
 Please read [contributing guidelines here](https://github.com/ngrx/store/blob/master/CONTRIBUTING.md).

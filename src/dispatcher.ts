@@ -5,6 +5,10 @@ export interface Action {
   payload?: any;
 }
 
+export interface TypedAction<T> extends Action {
+  payload: T;
+}
+
 export class Dispatcher extends BehaviorSubject<Action> {
   static INIT = '@ngrx/store/init';
 

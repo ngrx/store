@@ -5,20 +5,20 @@ const todo = (state, action) => {
         id: action.payload.id,
         text: action.payload.text,
         completed: false
-      }
+      };
     case 'TOGGLE_TODO':
       if (state.id !== action.id) {
-        return state
+        return state;
       }
 
       return Object.assign({}, state, {
         completed: !state.completed
-      })
+      });
 
     default:
-      return state
+      return state;
   }
-}
+};
 
 export const todos = (state = [], action) => {
   switch (action.type) {
@@ -26,21 +26,21 @@ export const todos = (state = [], action) => {
       return [
         ...state,
         todo(undefined, action)
-      ]
+      ];
     case 'TOGGLE_TODO':
       return state.map(t =>
         todo(t, action)
-      )
+      );
     default:
-      return state
+      return state;
   }
-}
+};
 
 export const todoCount = (state = 0, action) => {
-  switch(action.type){
+  switch (action.type) {
     case 'SET_COUNT':
       return action.payload;
     default:
       return state;
   }
-}
+};

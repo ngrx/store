@@ -102,6 +102,8 @@ _select_ slice(s) of state:
 
 ```ts
 import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs/Observable';
+
 import { INCREMENT, DECREMENT, RESET } from './counter';
 
 interface AppState {

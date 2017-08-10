@@ -1,5 +1,5 @@
 ---
-# This repository is for version 2.x of of @ngrx/store.
+# This repository is for version 2.x of @ngrx/store.
 # [Click here for the latest version (4.x)](https://github.com/ngrx/platform)
 ---
 

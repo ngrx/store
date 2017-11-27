@@ -79,7 +79,7 @@ export function counterReducer(state: number = 0, action: Action) {
 }
 ```
 
-In your app's main module, import those reducers and use the `StoreModule.provideStore(reducers)`
+In your app's main module, import those reducers and use the `StoreModule.forRoot(reducers)`
 function to provide them to Angular's injector:
 
 ```ts
@@ -90,7 +90,7 @@ import { counterReducer } from './counter';
 @NgModule({
   imports: [
     BrowserModule,
-    StoreModule.provideStore({ counter: counterReducer })
+    StoreModule.forRoot({ counter: counterReducer })
   ]
 })
 export class AppModule {}
